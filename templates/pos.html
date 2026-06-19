@@ -4,6 +4,7 @@
 
 <div class="row g-0" style="height: calc(100vh - 56px);">
     <div class="col-12 col-md-8 d-flex flex-column p-1 p-md-2">
+        <input type="text" class="form-control mb-2" id="productSearch" placeholder="Search products..." autocomplete="off">
         <div class="d-flex gap-1 gap-md-2 overflow-auto pb-2 category-bar">
             <button class="btn btn-outline-warning cat-filter active" data-cat="all"><i class="bi bi-grid-3x3-gap-fill"></i> All</button>
             {% for cat in categories %}
@@ -13,8 +14,9 @@
         <div class="row g-1 g-md-2 overflow-auto flex-grow-1 product-grid" id="productGrid">
             {% for p in products %}
             <div class="col-4 col-lg-3 product-card" data-cat="{{ p.category_id }}">
-                <button class="btn btn-product w-100 h-100 d-flex flex-column align-items-center justify-content-center p-2"
+                <button class="btn btn-product w-100 h-100 d-flex flex-column align-items-center justify-content-center p-2 position-relative"
                         onclick="addToCart({{ p.id }}, '{{ p.name }}', {{ p.sell_price }})">
+                    <span class="stock-dot {% if p.stock_qty <= 0 %}bg-danger{% elif p.stock_qty <= 10 %}bg-warning{% else %}bg-success{% endif %}"></span>
                     <span class="product-name">{{ p.name }}</span>
                     <span class="product-price text-warning">KES {{ "%.0f"|format(p.sell_price) }}</span>
                     <span class="product-stock text-secondary small">{{ p.stock_qty }} {{ p.unit }}</span>
@@ -229,6 +231,14 @@ document.addEventListener('DOMContentLoaded', function() {
 function printReceipt() {
     window.print();
 }
+
+document.getElementById('productSearch').addEventListener('input', function() {
+    const q = this.value.toLowerCase();
+    document.querySelectorAll('.product-card').forEach(card => {
+        const name = card.querySelector('.product-name').textContent.toLowerCase();
+        card.style.display = name.includes(q) ? '' : 'none';
+    });
+});
 
 document.querySelectorAll('.cat-filter').forEach(btn => {
     btn.addEventListener('click', function() {

@@ -133,6 +133,16 @@ body.pos-layout {
     color: #333 !important;
 }
 
+.stock-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+
 .product-name {
     font-size: 0.8rem;
     font-weight: 600;
