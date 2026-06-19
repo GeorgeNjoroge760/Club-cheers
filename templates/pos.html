@@ -114,8 +114,9 @@
                 </div>
                 {% endif %}
             </div>
-            <div class="modal-footer border-secondary justify-content-center">
-                <a href="{{ url_for('pos.pos') }}" class="btn btn-warning btn-lg px-5">New Sale</a>
+            <div class="modal-footer border-secondary justify-content-center gap-2">
+                <button class="btn btn-outline-light btn-lg px-4" onclick="printReceipt()">Print</button>
+                <a href="{{ url_for('pos.pos') }}" class="btn btn-warning btn-lg px-4">New Sale</a>
             </div>
         </div>
     </div>
@@ -199,6 +200,10 @@ document.addEventListener('DOMContentLoaded', function() {
     receiptModal.show();
 });
 {% endif %}
+
+function printReceipt() {
+    window.print();
+}
 
 // Category filtering
 document.querySelectorAll('.cat-filter').forEach(btn => {

@@ -164,3 +164,37 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--accent);
 }
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #receiptModal, #receiptModal * {
+        visibility: visible;
+    }
+    #receiptModal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 80mm;
+    }
+    #receiptModal .modal-header,
+    #receiptModal .modal-footer {
+        display: none;
+    }
+    #receiptModal .modal-content {
+        border: none;
+        background: white !important;
+        color: black !important;
+    }
+    #receiptModal .modal-content * {
+        color: black !important;
+        background: transparent !important;
+    }
+    #receiptModal .text-warning {
+        color: black !important;
+    }
+    #receiptModal hr {
+        border-color: #ccc !important;
+    }
+}
