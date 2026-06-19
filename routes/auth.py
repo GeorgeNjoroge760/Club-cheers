@@ -13,26 +13,13 @@ def staff_select():
 @auth_bp.route('/select-staff', methods=['POST'])
 def select_staff():
     staff_id = request.form.get('staff_id')
-    password = request.form.get('password', '')
     staff = Staff.query.get(staff_id)
-    last_name = staff.name if staff else ''
     if staff and staff.active and staff.role == 'attendant':
-        if not staff.password_hash:
-            err = 'No PIN set. Ask admin to set your PIN.'
-        elif staff.check_password(password):
-            session['staff_id'] = staff.id
-            session['staff_name'] = staff.name
-            session['role'] = 'attendant'
-            return redirect(url_for('pos.pos'))
-        else:
-            err = 'Invalid PIN'
-    else:
-        err = 'Invalid PIN'
-    staff_list = Staff.query.filter_by(active=True, role='attendant').all()
-    return render_template('staff_select.html', staff=staff_list,
-                           error=err,
-                           last_staff_id=staff_id,
-                           last_staff_name=last_name)
+        session['staff_id'] = staff.id
+        session['staff_name'] = staff.name
+        session['role'] = 'attendant'
+        return redirect(url_for('pos.pos'))
+    return redirect(url_for('auth.staff_select'))
 
 
 @auth_bp.route('/admin/login', methods=['GET', 'POST'])

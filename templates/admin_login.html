@@ -18,7 +18,12 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label"><i class="bi bi-lock"></i> Password</label>
-                    <input type="password" name="password" class="form-control form-control-lg" required>
+                    <div class="input-group">
+                        <input type="password" name="password" id="adminPassword" class="form-control form-control-lg" required>
+                        <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()" style="border-color: #ced4da;">
+                            <i class="bi bi-eye" id="toggleIcon"></i>
+                        </button>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-lg w-100 fw-bold text-light" style="background: #166534; border-color: #166534;">
                     <i class="bi bi-box-arrow-in-right"></i> Login
@@ -32,4 +37,20 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function togglePassword() {
+    var input = document.getElementById('adminPassword');
+    var icon = document.getElementById('toggleIcon');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('bi-eye', 'bi-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.replace('bi-eye-slash', 'bi-eye');
+    }
+}
+</script>
 {% endblock %}
