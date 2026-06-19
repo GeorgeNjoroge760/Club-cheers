@@ -46,6 +46,7 @@
                     <th>Total</th>
                     <th>Payment</th>
                     <th>Time</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -65,6 +66,11 @@
                         </span>
                     </td>
                     <td class="small text-muted">{{ s.time }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-warning" onclick="viewReceipt({{ s.id }})">
+                            <i class="bi bi-receipt"></i>
+                        </button>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -103,4 +109,84 @@
     {% endif %}
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<div class="modal fade" id="receiptModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content bg-dark border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title text-warning"><i class="bi bi-receipt"></i> Receipt</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="receiptBody">
+                <div class="text-center text-secondary py-4">
+                    <i class="bi bi-hourglass-split" style="font-size: 2rem;"></i>
+                    <p class="mt-2">Loading...</p>
+                </div>
+            </div>
+            <div class="modal-footer border-secondary justify-content-center">
+                <button class="btn btn-outline-light px-4" onclick="printReceiptModal()">
+                    <i class="bi bi-printer"></i> Print
+                </button>
+                <button class="btn btn-secondary px-4" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentReceiptData = null;
+
+function viewReceipt(saleId) {
+    const modal = new bootstrap.Modal(document.getElementById('receiptModal'));
+    modal.show();
+
+    fetch('/sales/' + saleId + '/receipt')
+        .then(r => r.json())
+        .then(data => {
+            currentReceiptData = data;
+            let html = `
+                <div class="text-center mb-3">
+                    <i class="bi bi-cup-straw text-warning" style="font-size: 2rem;"></i>
+                    <div class="fs-5 fw-bold text-light">CHEERS CLUB</div>
+                    <div class="small text-muted">Receipt #${data.id}</div>
+                    <div class="small text-muted">${data.time}</div>
+                    <div class="small text-muted"><i class="bi bi-person"></i> ${data.staff}</div>
+                </div>
+                <hr class="border-secondary">
+                <div class="mb-3">`;
+            data.items.forEach(item => {
+                html += `
+                    <div class="d-flex justify-content-between small mb-1">
+                        <span>${item.name} <span class="text-muted">x${item.qty.toFixed(0)}</span></span>
+                        <span>KES ${item.total.toFixed(0)}</span>
+                    </div>`;
+            });
+            const badgeClass = data.payment_method === 'Cash' ? 'bg-success' : data.payment_method === 'M-Pesa' ? 'bg-warning text-dark' : 'bg-info';
+            const iconClass = data.payment_method === 'Cash' ? 'bi-cash' : data.payment_method === 'M-Pesa' ? 'bi-phone' : 'bi-credit-card';
+            html += `
+                </div>
+                <hr class="border-secondary">
+                <div class="d-flex justify-content-between fs-5 fw-bold">
+                    <span class="text-light">TOTAL</span>
+                    <span class="text-warning">KES ${data.total.toFixed(0)}</span>
+                </div>
+                <div class="text-center mt-2">
+                    <span class="badge fs-6 ${badgeClass}">
+                        <i class="bi ${iconClass}"></i> ${data.payment_method}
+                    </span>
+                </div>
+                <hr class="border-secondary">
+                <div class="text-center text-muted small">
+                    <i class="bi bi-emoji-smile"></i> Thank you, come again!
+                </div>`;
+            document.getElementById('receiptBody').innerHTML = html;
+        });
+}
+
+function printReceiptModal() {
+    window.print();
+}
+</script>
 {% endblock %}

@@ -157,6 +157,34 @@ def calc_total(cart):
     return round(sum(item['total'] for item in cart), 2)
 
 
+@pos_bp.route('/sales/<int:sale_id>/receipt')
+def receipt_json(sale_id):
+    if not pos_required():
+        return {'error': 'Unauthorized'}, 401
+
+    sale = Sale.query.get_or_404(sale_id)
+    role = session.get('role')
+    if role != 'admin' and sale.staff_id != session.get('staff_id'):
+        return {'error': 'Forbidden'}, 403
+
+    items = []
+    for si in sale.items:
+        items.append({
+            'name': si.product.name,
+            'qty': si.qty,
+            'total': round(si.qty * si.unit_price, 2)
+        })
+
+    return {
+        'id': sale.id,
+        'items': items,
+        'total': sale.total,
+        'payment_method': 'M-Pesa' if sale.payment_method == 'mpesa' else sale.payment_method.title(),
+        'staff': sale.staff.name,
+        'time': sale.created_at.strftime('%d/%m/%Y %H:%M')
+    }
+
+
 @pos_bp.route('/sales')
 def sales_history():
     if not pos_required():
