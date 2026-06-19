@@ -25,12 +25,19 @@ def dashboard():
     today_count = len(today_sales)
     month_total = round(sum(s.total for s in month_sales), 2)
 
+    today_cost = 0
+    for s in today_sales:
+        for si in s.items:
+            today_cost += (si.cost_price or 0) * si.qty
+    today_profit = round(today_total - today_cost, 2)
+
     product_count = Product.query.filter_by(active=True).count()
     staff_count = Staff.query.filter_by(active=True).count()
 
     return render_template('admin_dashboard.html',
                            today_total=today_total,
                            today_count=today_count,
+                           today_profit=today_profit,
                            month_total=month_total,
                            product_count=product_count,
                            staff_count=staff_count,
