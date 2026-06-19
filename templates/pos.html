@@ -24,51 +24,40 @@
         </div>
     </div>
 
-    <div class="col-12 col-md-4 bg-white border-start d-flex flex-column cart-panel p-2 p-md-3">
+    <div class="d-none d-md-flex col-md-4 bg-white border-start flex-column cart-panel p-2 p-md-3">
         <h5 class="text-dark mb-3 fs-6">
             <i class="bi bi-cart-fill text-warning"></i> Cart
             <button class="btn btn-outline-danger btn-sm float-end" onclick="clearCart()"><i class="bi bi-trash3"></i></button>
         </h5>
         <div class="flex-grow-1 overflow-auto" id="cartItems">
-            {% if cart %}
-            {% for item in cart %}
-            <div class="cart-item d-flex justify-content-between align-items-center mb-2 p-2 bg-dark-light rounded" data-pid="{{ item.product_id }}">
-                <div class="flex-grow-1 min-w-0">
-                    <div class="fw-bold small text-truncate">{{ item.name }}</div>
-                    <div class="d-flex align-items-center gap-1 mt-1">
-                        <button class="btn btn-sm btn-outline-secondary" onclick="updateQty({{ item.product_id }}, {{ item.qty - 1 }})"><i class="bi bi-dash"></i></button>
-                        <span class="fw-bold px-1" id="qty-{{ item.product_id }}">{{ item.qty }}</span>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="updateQty({{ item.product_id }}, {{ item.qty + 1 }})"><i class="bi bi-plus"></i></button>
-                        <span class="ms-auto text-warning small fw-bold" id="line-{{ item.product_id }}">KES {{ "%.0f"|format(item.total) }}</span>
-                    </div>
-                </div>
-                <button class="btn btn-sm btn-outline-danger ms-1" onclick="updateQty({{ item.product_id }}, 0)"><i class="bi bi-x"></i></button>
-            </div>
-            {% endfor %}
-            {% else %}
-            <div class="text-secondary text-center mt-5">
-                <i class="bi bi-cart" style="font-size: 3rem;"></i>
-                <p class="mt-2">Cart is empty</p>
-            </div>
-            {% endif %}
+            {% include "_cart_items.html" %}
         </div>
         <div class="mt-auto pt-2 border-top border-secondary">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="text-dark small">Total:</span>
-                <span class="fs-4 fw-bold text-warning" id="cartTotal">KES {{ "%.0f"|format(cart|sum(attribute='total')) }}</span>
-            </div>
-            <div class="mb-2">
-                <select class="form-select  form-select-lg" id="paymentMethod">
-                    <option value="cash"><i class="bi bi-cash"></i> Cash</option>
-                    <option value="card"><i class="bi bi-credit-card"></i> Card</option>
-                    <option value="mpesa"><i class="bi bi-phone"></i> M-Pesa</option>
-                </select>
-            </div>
-            <div class="d-grid gap-2">
-                <button class="btn btn-success btn-lg fw-bold" id="checkoutBtn" onclick="checkout()">
-                    <i class="bi bi-credit-card-2-front"></i> Charge
-                </button>
-            </div>
+            {% include "_cart_footer.html" %}
+        </div>
+    </div>
+</div>
+
+<div class="d-md-none position-fixed bottom-0 end-0 m-3" style="z-index: 1030;">
+    <button class="btn btn-warning rounded-circle shadow-lg position-relative" style="width: 60px; height: 60px; font-size: 1.5rem;"
+            onclick="openMobileCart()" id="cartFab">
+        <i class="bi bi-cart-fill"></i>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartBadge" style="display: none;">0</span>
+    </button>
+</div>
+
+<div class="offcanvas offcanvas-bottom d-md-none" tabindex="-1" id="mobileCart" style="height: 75vh; border-radius: 16px 16px 0 0;">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title"><i class="bi bi-cart-fill text-warning"></i> Cart</h5>
+        <button class="btn btn-outline-danger btn-sm me-2" onclick="clearCart()"><i class="bi bi-trash3"></i></button>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column p-3">
+        <div class="flex-grow-1 overflow-auto mb-3" id="mobileCartItems">
+            {% include "_cart_items.html" %}
+        </div>
+        <div class="border-top pt-3">
+            {% include "_cart_footer.html" %}
         </div>
     </div>
 </div>
@@ -138,7 +127,20 @@
 <script>
 const cartTotal = document.getElementById('cartTotal');
 const cartItems = document.getElementById('cartItems');
+const mobileCartItems = document.getElementById('mobileCartItems');
 const checkoutBtn = document.getElementById('checkoutBtn');
+const cartBadge = document.getElementById('cartBadge');
+let mobileCartOffcanvas = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    const el = document.getElementById('mobileCart');
+    if (el) mobileCartOffcanvas = new bootstrap.Offcanvas(el);
+    updateBadge();
+});
+
+function openMobileCart() {
+    if (mobileCartOffcanvas) mobileCartOffcanvas.show();
+}
 
 function addToCart(productId, name, price) {
     fetch('{{ url_for("pos.cart_add") }}', {
@@ -168,11 +170,22 @@ function clearCart() {
     .then(data => updateCartUI(data));
 }
 
+function updateBadge() {
+    if (!cartBadge) return;
+    const count = document.querySelectorAll('.cart-item').length;
+    if (count > 0) {
+        cartBadge.style.display = 'inline';
+        cartBadge.textContent = count;
+    } else {
+        cartBadge.style.display = 'none';
+    }
+}
+
 function updateCartUI(data) {
     const items = data.cart;
     let html = '';
     if (items.length === 0) {
-        html = '<div class="text-secondary text-center mt-5"><i class="bi bi-cart" style="font-size: 3rem;"></i><p class="mt-2">Cart is empty</p></div>';
+        html = '<div class="text-secondary text-center mt-5 empty-cart-msg"><i class="bi bi-cart" style="font-size: 3rem;"></i><p class="mt-2">Cart is empty</p></div>';
         checkoutBtn.disabled = true;
     } else {
         checkoutBtn.disabled = false;
@@ -193,7 +206,9 @@ function updateCartUI(data) {
         });
     }
     cartItems.innerHTML = html;
+    if (mobileCartItems) mobileCartItems.innerHTML = html;
     cartTotal.textContent = 'KES ' + data.total.toFixed(0);
+    updateBadge();
 }
 
 function checkout() {

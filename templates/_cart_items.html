@@ -1,0 +1,21 @@
+{% if cart %}
+{% for item in cart %}
+<div class="cart-item d-flex justify-content-between align-items-center mb-2 p-2 bg-dark-light rounded" data-pid="{{ item.product_id }}">
+    <div class="flex-grow-1 min-w-0">
+        <div class="fw-bold small text-truncate">{{ item.name }}</div>
+        <div class="d-flex align-items-center gap-1 mt-1">
+            <button class="btn btn-sm btn-outline-secondary" onclick="updateQty({{ item.product_id }}, {{ item.qty - 1 }})"><i class="bi bi-dash"></i></button>
+            <span class="fw-bold px-1" id="qty-{{ item.product_id }}">{{ item.qty }}</span>
+            <button class="btn btn-sm btn-outline-secondary" onclick="updateQty({{ item.product_id }}, {{ item.qty + 1 }})"><i class="bi bi-plus"></i></button>
+            <span class="ms-auto text-warning small fw-bold" id="line-{{ item.product_id }}">KES {{ "%.0f"|format(item.total) }}</span>
+        </div>
+    </div>
+    <button class="btn btn-sm btn-outline-danger ms-1" onclick="updateQty({{ item.product_id }}, 0)"><i class="bi bi-x"></i></button>
+</div>
+{% endfor %}
+{% else %}
+<div class="text-secondary text-center mt-5 empty-cart-msg">
+    <i class="bi bi-cart" style="font-size: 3rem;"></i>
+    <p class="mt-2">Cart is empty</p>
+</div>
+{% endif %}

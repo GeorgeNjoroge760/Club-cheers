@@ -230,12 +230,6 @@ body.pos-layout {
 
 /* Tablet/mobile */
 @media (max-width: 767px) {
-    .cart-panel {
-        height: 45vh;
-        border-top: 1px solid #ddd !important;
-        border-left: none !important;
-    }
-
     .product-card {
         flex: 0 0 50%;
         max-width: 50%;
