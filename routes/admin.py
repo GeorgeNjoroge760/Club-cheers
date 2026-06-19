@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
-from models import db, Staff
+from models import db, Staff, Sale, Product
+from datetime import datetime, timezone
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -12,7 +13,35 @@ def admin_required():
 def dashboard():
     if not admin_required():
         return redirect(url_for('auth.admin_login'))
-    return redirect(url_for('reports.reports'))
+
+    today = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+    month_start = today.replace(day=1)
+
+    today_sales = Sale.query.filter(Sale.created_at >= today).all()
+    month_sales = Sale.query.filter(Sale.created_at >= month_start).all()
+    recent_sales = Sale.query.order_by(Sale.created_at.desc()).limit(5).all()
+
+    today_total = round(sum(s.total for s in today_sales), 2)
+    today_count = len(today_sales)
+    month_total = round(sum(s.total for s in month_sales), 2)
+
+    cost = 0
+    for s in today_sales:
+        for si in s.items:
+            cost += (si.cost_price or 0) * si.qty
+    today_profit = round(today_total - cost, 2)
+
+    product_count = Product.query.filter_by(active=True).count()
+    staff_count = Staff.query.filter_by(active=True).count()
+
+    return render_template('admin_dashboard.html',
+                           today_total=today_total,
+                           today_count=today_count,
+                           today_profit=today_profit,
+                           month_total=month_total,
+                           product_count=product_count,
+                           staff_count=staff_count,
+                           recent_sales=recent_sales)
 
 
 @admin_bp.route('/admin/staff')

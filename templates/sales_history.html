@@ -7,6 +7,30 @@
         <a href="{{ url_for('pos.pos') }}" class="btn btn-warning btn-sm">Back to POS</a>
     </div>
 
+    {% if role == 'admin' %}
+    <form method="GET" class="row g-2 mb-3">
+        <div class="col">
+            <select name="payment" class="form-select form-select-sm bg-dark text-light border-secondary" onchange="this.form.submit()">
+                <option value="">All Payments</option>
+                <option value="cash" {% if payment_filter == 'cash' %}selected{% endif %}>Cash</option>
+                <option value="card" {% if payment_filter == 'card' %}selected{% endif %}>Card</option>
+                <option value="mpesa" {% if payment_filter == 'mpesa' %}selected{% endif %}>M-Pesa</option>
+            </select>
+        </div>
+        <div class="col">
+            <select name="staff" class="form-select form-select-sm bg-dark text-light border-secondary" onchange="this.form.submit()">
+                <option value="">All Staff</option>
+                {% for s in staff_list %}
+                <option value="{{ s.id }}" {% if staff_filter == s.id|string %}selected{% endif %}>{{ s.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-auto">
+            <a href="{{ url_for('pos.sales_history') }}" class="btn btn-sm btn-outline-secondary">Clear</a>
+        </div>
+    </form>
+    {% endif %}
+
     {% if sales %}
     <div class="table-responsive">
         <table class="table table-dark table-striped table-hover align-middle">
@@ -47,7 +71,7 @@
         <ul class="pagination pagination-sm justify-content-center">
             {% if page > 1 %}
             <li class="page-item">
-                <a class="page-link bg-dark text-warning border-secondary" href="{{ url_for('pos.sales_history', page=page-1) }}">Previous</a>
+                <a class="page-link bg-dark text-warning border-secondary" href="{{ url_for('pos.sales_history', page=page-1, payment=payment_filter, staff=staff_filter) }}">Previous</a>
             </li>
             {% endif %}
             <li class="page-item disabled">
@@ -55,7 +79,7 @@
             </li>
             {% if page < total_pages %}
             <li class="page-item">
-                <a class="page-link bg-dark text-warning border-secondary" href="{{ url_for('pos.sales_history', page=page+1) }}">Next</a>
+                <a class="page-link bg-dark text-warning border-secondary" href="{{ url_for('pos.sales_history', page=page+1, payment=payment_filter, staff=staff_filter) }}">Next</a>
             </li>
             {% endif %}
         </ul>

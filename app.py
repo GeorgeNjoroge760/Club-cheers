@@ -1,7 +1,7 @@
 import os
 from flask import Flask
 from models import db
-from routes import auth_bp, pos_bp, inventory_bp, reports_bp, admin_bp
+from routes import auth_bp, pos_bp, inventory_bp, reports_bp, admin_bp, orders_bp, analytics_bp
 
 
 def create_app():
@@ -20,6 +20,8 @@ def create_app():
     app.register_blueprint(inventory_bp)
     app.register_blueprint(reports_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(orders_bp)
+    app.register_blueprint(analytics_bp)
 
     with app.app_context():
         db.create_all()

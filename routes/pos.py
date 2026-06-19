@@ -167,10 +167,17 @@ def sales_history():
 
     page = request.args.get('page', 1, type=int)
     per_page = 20
+    payment_filter = request.args.get('payment', '')
+    staff_filter = request.args.get('staff', '')
 
     query = Sale.query
     if role != 'admin':
         query = query.filter_by(staff_id=staff_id)
+    else:
+        if payment_filter:
+            query = query.filter_by(payment_method=payment_filter)
+        if staff_filter:
+            query = query.filter_by(staff_id=int(staff_filter))
 
     sales = query.order_by(Sale.created_at.desc()).paginate(page=page, per_page=per_page, error_out=False)
 
@@ -185,8 +192,15 @@ def sales_history():
             'time': s.created_at.strftime('%d/%m/%Y %H:%M')
         })
 
+    staff_list = []
+    if role == 'admin':
+        staff_list = Staff.query.filter_by(active=True).order_by(Staff.name).all()
+
     return render_template('sales_history.html',
                            sales=sales_data,
                            page=page,
                            total_pages=sales.pages,
-                           role=role)
+                           role=role,
+                           staff_list=staff_list,
+                           payment_filter=payment_filter,
+                           staff_filter=staff_filter)
