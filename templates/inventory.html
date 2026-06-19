@@ -2,10 +2,14 @@
 {% block content %}
 <div class="container p-3">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="text-light mb-0">Inventory</h4>
-        <div>
-            <a href="{{ url_for('inventory.stock_in') }}" class="btn btn-success me-2">+ Stock In</a>
-            <a href="{{ url_for('inventory.product_add') }}" class="btn btn-warning">+ Add Product</a>
+        <h4 class="text-light mb-0"><i class="bi bi-box-seam-fill text-warning"></i> Products</h4>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('inventory.stock_in') }}" class="btn btn-success btn-sm fw-bold">
+                <i class="bi bi-box-arrow-in-down"></i> Stock In
+            </a>
+            <a href="{{ url_for('inventory.product_add') }}" class="btn btn-warning btn-sm fw-bold">
+                <i class="bi bi-plus-circle"></i> Add
+            </a>
         </div>
     </div>
 
@@ -15,9 +19,9 @@
                 <thead>
                     <tr>
                         <th>Product</th>
-                        <th>Category</th>
+                        <th class="d-none d-sm-table-cell">Category</th>
                         <th>Sell Price</th>
-                        <th>Cost Price</th>
+                        <th class="d-none d-sm-table-cell">Cost</th>
                         <th>Stock</th>
                         <th>Actions</th>
                     </tr>
@@ -26,32 +30,41 @@
                     {% for p in products %}
                     <tr class="{% if not p.active %}text-muted{% endif %}">
                         <td>{{ p.name }}</td>
-                        <td>{{ p.category.name }}</td>
+                        <td class="d-none d-sm-table-cell">{{ p.category.name }}</td>
                         <td>KES {{ "%.0f"|format(p.sell_price) }}</td>
-                        <td>KES {{ "%.0f"|format(p.cost_price) if p.cost_price else '-' }}</td>
+                        <td class="d-none d-sm-table-cell">KES {{ "%.0f"|format(p.cost_price) if p.cost_price else '-' }}</td>
                         <td>
-                            <span class="{% if p.stock_qty < 10 %}text-danger fw-bold{% endif %}">
+                            <span class="badge {% if p.stock_qty < 10 %}bg-danger{% else %}bg-secondary{% endif %}">
                                 {{ "%.0f"|format(p.stock_qty) }} {{ p.unit }}
                             </span>
                         </td>
                         <td>
-                            <a href="{{ url_for('inventory.product_edit', product_id=p.id) }}" class="btn btn-sm btn-outline-light">Edit</a>
-                            <form method="POST" action="{{ url_for('inventory.product_toggle', product_id=p.id) }}" class="d-inline">
-                                <button type="submit" class="btn btn-sm {% if p.active %}btn-outline-danger{% else %}btn-outline-success{% endif %}">
-                                    {% if p.active %}Disable{% else %}Enable{% endif %}
-                                </button>
-                            </form>
+                            <div class="d-flex gap-1">
+                                <a href="{{ url_for('inventory.product_edit', product_id=p.id) }}" class="btn btn-sm btn-outline-light">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form method="POST" action="{{ url_for('inventory.product_toggle', product_id=p.id) }}" class="d-inline">
+                                    <button type="submit" class="btn btn-sm {% if p.active %}btn-outline-danger{% else %}btn-outline-success{% endif %}">
+                                        <i class="bi {% if p.active %}bi-toggle-on{% else %}bi-toggle-off{% endif %}"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     {% else %}
-                    <tr><td colspan="6" class="text-center text-muted">No products yet</td></tr>
+                    <tr><td colspan="6" class="text-center text-muted py-4">
+                        <i class="bi bi-box" style="font-size: 2rem;"></i>
+                        <p class="mt-2">No products yet</p>
+                    </td></tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
     <div class="mt-3">
-        <a href="{{ url_for('admin.dashboard') }}" class="text-secondary">&larr; Back to Dashboard</a>
+        <a href="{{ url_for('admin.dashboard') }}" class="text-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
     </div>
 </div>
 {% endblock %}

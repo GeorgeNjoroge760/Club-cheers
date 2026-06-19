@@ -3,14 +3,14 @@
 {% block content %}
 
 <div class="row g-0" style="height: calc(100vh - 56px);">
-    <div class="col-12 col-md-8 d-flex flex-column p-2">
-        <div class="d-flex gap-2 overflow-auto pb-2 category-bar">
-            <button class="btn btn-outline-warning btn-sm cat-filter active" data-cat="all">All</button>
+    <div class="col-12 col-md-8 d-flex flex-column p-1 p-md-2">
+        <div class="d-flex gap-1 gap-md-2 overflow-auto pb-2 category-bar">
+            <button class="btn btn-outline-warning cat-filter active" data-cat="all"><i class="bi bi-grid-3x3-gap-fill"></i> All</button>
             {% for cat in categories %}
-            <button class="btn btn-outline-warning btn-sm cat-filter" data-cat="{{ cat.id }}">{{ cat.name }}</button>
+            <button class="btn btn-outline-warning cat-filter" data-cat="{{ cat.id }}">{{ cat.name }}</button>
             {% endfor %}
         </div>
-        <div class="row g-2 overflow-auto flex-grow-1 product-grid" id="productGrid">
+        <div class="row g-1 g-md-2 overflow-auto flex-grow-1 product-grid" id="productGrid">
             {% for p in products %}
             <div class="col-4 col-lg-3 product-card" data-cat="{{ p.category_id }}">
                 <button class="btn btn-product w-100 h-100 d-flex flex-column align-items-center justify-content-center p-2"
@@ -24,45 +24,50 @@
         </div>
     </div>
 
-    <div class="col-12 col-md-4 bg-dark border-start border-secondary d-flex flex-column cart-panel p-3">
-        <h5 class="text-light mb-3">
-            <span class="text-warning">&#128722;</span> Cart
-            <button class="btn btn-outline-danger btn-sm float-end" onclick="clearCart()">Clear</button>
+    <div class="col-12 col-md-4 bg-dark border-start border-secondary d-flex flex-column cart-panel p-2 p-md-3">
+        <h5 class="text-light mb-3 fs-6">
+            <i class="bi bi-cart-fill text-warning"></i> Cart
+            <button class="btn btn-outline-danger btn-sm float-end" onclick="clearCart()"><i class="bi bi-trash3"></i></button>
         </h5>
         <div class="flex-grow-1 overflow-auto" id="cartItems">
             {% if cart %}
             {% for item in cart %}
             <div class="cart-item d-flex justify-content-between align-items-center mb-2 p-2 bg-dark-light rounded" data-pid="{{ item.product_id }}">
-                <div class="flex-grow-1">
-                    <div class="fw-bold small">{{ item.name }}</div>
-                    <div class="d-flex align-items-center gap-2 mt-1">
-                        <button class="btn btn-sm btn-outline-secondary px-2" onclick="updateQty({{ item.product_id }}, {{ item.qty - 1 }})">-</button>
-                        <span class="fw-bold" id="qty-{{ item.product_id }}">{{ item.qty }}</span>
-                        <button class="btn btn-sm btn-outline-secondary px-2" onclick="updateQty({{ item.product_id }}, {{ item.qty + 1 }})">+</button>
-                        <span class="ms-auto text-warning" id="line-{{ item.product_id }}">KES {{ "%.0f"|format(item.total) }}</span>
+                <div class="flex-grow-1 min-w-0">
+                    <div class="fw-bold small text-truncate">{{ item.name }}</div>
+                    <div class="d-flex align-items-center gap-1 mt-1">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="updateQty({{ item.product_id }}, {{ item.qty - 1 }})"><i class="bi bi-dash"></i></button>
+                        <span class="fw-bold px-1" id="qty-{{ item.product_id }}">{{ item.qty }}</span>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="updateQty({{ item.product_id }}, {{ item.qty + 1 }})"><i class="bi bi-plus"></i></button>
+                        <span class="ms-auto text-warning small fw-bold" id="line-{{ item.product_id }}">KES {{ "%.0f"|format(item.total) }}</span>
                     </div>
                 </div>
-                <button class="btn btn-sm btn-outline-danger ms-2" onclick="updateQty({{ item.product_id }}, 0)">&times;</button>
+                <button class="btn btn-sm btn-outline-danger ms-1" onclick="updateQty({{ item.product_id }}, 0)"><i class="bi bi-x"></i></button>
             </div>
             {% endfor %}
             {% else %}
-            <p class="text-secondary text-center mt-4">Cart is empty</p>
+            <div class="text-secondary text-center mt-5">
+                <i class="bi bi-cart" style="font-size: 3rem;"></i>
+                <p class="mt-2">Cart is empty</p>
+            </div>
             {% endif %}
         </div>
-        <div class="mt-auto pt-3 border-top border-secondary">
-            <div class="d-flex justify-content-between mb-2">
-                <span class="text-light">Total:</span>
+        <div class="mt-auto pt-2 border-top border-secondary">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-light small">Total:</span>
                 <span class="fs-4 fw-bold text-warning" id="cartTotal">KES {{ "%.0f"|format(cart|sum(attribute='total')) }}</span>
             </div>
             <div class="mb-2">
-                <select class="form-select bg-dark text-light border-secondary" id="paymentMethod">
-                    <option value="cash">Cash</option>
-                    <option value="card">Card</option>
-                    <option value="mpesa">M-Pesa</option>
+                <select class="form-select bg-dark text-light border-secondary form-select-lg" id="paymentMethod">
+                    <option value="cash"><i class="bi bi-cash"></i> Cash</option>
+                    <option value="card"><i class="bi bi-credit-card"></i> Card</option>
+                    <option value="mpesa"><i class="bi bi-phone"></i> M-Pesa</option>
                 </select>
             </div>
             <div class="d-grid gap-2">
-                <button class="btn btn-success btn-lg" id="checkoutBtn" onclick="checkout()">Charge</button>
+                <button class="btn btn-success btn-lg fw-bold" id="checkoutBtn" onclick="checkout()">
+                    <i class="bi bi-credit-card-2-front"></i> Charge
+                </button>
             </div>
         </div>
     </div>
@@ -72,26 +77,26 @@
     <input type="hidden" name="payment_method" id="paymentMethodInput">
 </form>
 
-<!-- Receipt Modal -->
 <div class="modal fade" id="receiptModal" tabindex="-1" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content bg-dark border-secondary">
             <div class="modal-header border-secondary">
-                <h5 class="modal-title text-warning">&#128230; Receipt</h5>
+                <h5 class="modal-title text-warning"><i class="bi bi-receipt"></i> Receipt</h5>
             </div>
             <div class="modal-body">
                 {% if receipt %}
                 <div class="text-center mb-3">
+                    <i class="bi bi-cup-straw text-warning" style="font-size: 2rem;"></i>
                     <div class="fs-5 fw-bold text-light">CHEERS CLUB</div>
                     <div class="small text-muted">Receipt #{{ receipt.id }}</div>
                     <div class="small text-muted">{{ receipt.time }}</div>
-                    <div class="small text-muted">Attendant: {{ receipt.staff }}</div>
+                    <div class="small text-muted"><i class="bi bi-person"></i> {{ receipt.staff }}</div>
                 </div>
                 <hr class="border-secondary">
                 <div class="mb-3">
                     {% for item in receipt.line_items %}
                     <div class="d-flex justify-content-between small mb-1">
-                        <span>{{ item.name }} x{{ "%.0f"|format(item.qty) }}</span>
+                        <span>{{ item.name }} <span class="text-muted">x{{ "%.0f"|format(item.qty) }}</span></span>
                         <span>KES {{ "%.0f"|format(item.total) }}</span>
                     </div>
                     {% endfor %}
@@ -106,18 +111,23 @@
                         {% if receipt.payment_method == 'Cash' %}bg-success
                         {% elif receipt.payment_method == 'M-Pesa' %}bg-warning text-dark
                         {% else %}bg-info{% endif %}">
+                        <i class="bi {% if receipt.payment_method == 'Cash' %}bi-cash{% elif receipt.payment_method == 'M-Pesa' %}bi-phone{% else %}bi-credit-card{% endif %}"></i>
                         {{ receipt.payment_method }}
                     </span>
                 </div>
                 <hr class="border-secondary">
                 <div class="text-center text-muted small">
-                    Thank you, come again!
+                    <i class="bi bi-emoji-smile"></i> Thank you, come again!
                 </div>
                 {% endif %}
             </div>
             <div class="modal-footer border-secondary justify-content-center gap-2">
-                <button class="btn btn-outline-light btn-lg px-4" onclick="printReceipt()">Print</button>
-                <a href="{{ url_for('pos.pos') }}" class="btn btn-warning btn-lg px-4">New Sale</a>
+                <button class="btn btn-outline-light px-4" onclick="printReceipt()">
+                    <i class="bi bi-printer"></i> Print
+                </button>
+                <a href="{{ url_for('pos.pos') }}" class="btn btn-warning px-4 fw-bold">
+                    <i class="bi bi-plus-circle"></i> New Sale
+                </a>
             </div>
         </div>
     </div>
@@ -162,23 +172,23 @@ function updateCartUI(data) {
     const items = data.cart;
     let html = '';
     if (items.length === 0) {
-        html = '<p class="text-secondary text-center mt-4">Cart is empty</p>';
+        html = '<div class="text-secondary text-center mt-5"><i class="bi bi-cart" style="font-size: 3rem;"></i><p class="mt-2">Cart is empty</p></div>';
         checkoutBtn.disabled = true;
     } else {
         checkoutBtn.disabled = false;
         items.forEach(item => {
             html += `
             <div class="cart-item d-flex justify-content-between align-items-center mb-2 p-2 bg-dark-light rounded">
-                <div class="flex-grow-1">
-                    <div class="fw-bold small">${item.name}</div>
-                    <div class="d-flex align-items-center gap-2 mt-1">
-                        <button class="btn btn-sm btn-outline-secondary px-2" onclick="updateQty(${item.product_id}, ${item.qty - 1})">-</button>
-                        <span class="fw-bold">${item.qty}</span>
-                        <button class="btn btn-sm btn-outline-secondary px-2" onclick="updateQty(${item.product_id}, ${item.qty + 1})">+</button>
-                        <span class="ms-auto text-warning">KES ${item.total.toFixed(0)}</span>
+                <div class="flex-grow-1 min-w-0">
+                    <div class="fw-bold small text-truncate">${item.name}</div>
+                    <div class="d-flex align-items-center gap-1 mt-1">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="updateQty(${item.product_id}, ${item.qty - 1})"><i class="bi bi-dash"></i></button>
+                        <span class="fw-bold px-1">${item.qty}</span>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="updateQty(${item.product_id}, ${item.qty + 1})"><i class="bi bi-plus"></i></button>
+                        <span class="ms-auto text-warning small fw-bold">KES ${item.total.toFixed(0)}</span>
                     </div>
                 </div>
-                <button class="btn btn-sm btn-outline-danger ms-2" onclick="updateQty(${item.product_id}, 0)">&times;</button>
+                <button class="btn btn-sm btn-outline-danger ms-1" onclick="updateQty(${item.product_id}, 0)"><i class="bi bi-x"></i></button>
             </div>`;
         });
     }
@@ -194,7 +204,6 @@ function checkout() {
     document.getElementById('checkoutForm').submit();
 }
 
-// Auto-show receipt modal if receipt data exists
 {% if receipt %}
 document.addEventListener('DOMContentLoaded', function() {
     const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
@@ -206,7 +215,6 @@ function printReceipt() {
     window.print();
 }
 
-// Category filtering
 document.querySelectorAll('.cat-filter').forEach(btn => {
     btn.addEventListener('click', function() {
         document.querySelectorAll('.cat-filter').forEach(b => b.classList.remove('active'));

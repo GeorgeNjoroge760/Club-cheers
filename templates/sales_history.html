@@ -3,18 +3,20 @@
 
 <div class="container py-3">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="text-light mb-0">Sales History</h4>
-        <a href="{{ url_for('pos.pos') }}" class="btn btn-warning btn-sm">Back to POS</a>
+        <h4 class="text-light mb-0"><i class="bi bi-clock-history text-warning"></i> Sales History</h4>
+        <a href="{{ url_for('pos.pos') }}" class="btn btn-warning btn-sm fw-bold">
+            <i class="bi bi-cart-fill"></i> POS
+        </a>
     </div>
 
     {% if role == 'admin' %}
     <form method="GET" class="row g-2 mb-3">
         <div class="col">
             <select name="payment" class="form-select form-select-sm bg-dark text-light border-secondary" onchange="this.form.submit()">
-                <option value="">All Payments</option>
-                <option value="cash" {% if payment_filter == 'cash' %}selected{% endif %}>Cash</option>
-                <option value="card" {% if payment_filter == 'card' %}selected{% endif %}>Card</option>
-                <option value="mpesa" {% if payment_filter == 'mpesa' %}selected{% endif %}>M-Pesa</option>
+                <option value=""><i class="bi bi-funnel"></i> All Payments</option>
+                <option value="cash" {% if payment_filter == 'cash' %}selected{% endif %}><i class="bi bi-cash"></i> Cash</option>
+                <option value="card" {% if payment_filter == 'card' %}selected{% endif %}><i class="bi bi-credit-card"></i> Card</option>
+                <option value="mpesa" {% if payment_filter == 'mpesa' %}selected{% endif %}><i class="bi bi-phone"></i> M-Pesa</option>
             </select>
         </div>
         <div class="col">
@@ -26,7 +28,9 @@
             </select>
         </div>
         <div class="col-auto">
-            <a href="{{ url_for('pos.sales_history') }}" class="btn btn-sm btn-outline-secondary">Clear</a>
+            <a href="{{ url_for('pos.sales_history') }}" class="btn btn-sm btn-outline-secondary h-100">
+                <i class="bi bi-x-circle"></i> Clear
+            </a>
         </div>
     </form>
     {% endif %}
@@ -37,8 +41,8 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Attendant</th>
-                    <th>Items</th>
+                    <th>Staff</th>
+                    <th class="d-none d-sm-table-cell">Items</th>
                     <th>Total</th>
                     <th>Payment</th>
                     <th>Time</th>
@@ -48,14 +52,15 @@
                 {% for s in sales %}
                 <tr>
                     <td>{{ s.id }}</td>
-                    <td>{{ s.staff }}</td>
-                    <td>{{ "%.0f"|format(s.items_count) }}</td>
+                    <td><i class="bi bi-person"></i> {{ s.staff }}</td>
+                    <td class="d-none d-sm-table-cell">{{ "%.0f"|format(s.items_count) }}</td>
                     <td class="text-warning fw-bold">KES {{ "%.0f"|format(s.total) }}</td>
                     <td>
                         <span class="badge
                             {% if s.payment_method == 'Cash' %}bg-success
                             {% elif s.payment_method == 'M-Pesa' %}bg-warning text-dark
                             {% else %}bg-info{% endif %}">
+                            <i class="bi {% if s.payment_method == 'Cash' %}bi-cash{% elif s.payment_method == 'M-Pesa' %}bi-phone{% else %}bi-credit-card{% endif %}"></i>
                             {{ s.payment_method }}
                         </span>
                     </td>
@@ -71,15 +76,19 @@
         <ul class="pagination pagination-sm justify-content-center">
             {% if page > 1 %}
             <li class="page-item">
-                <a class="page-link bg-dark text-warning border-secondary" href="{{ url_for('pos.sales_history', page=page-1, payment=payment_filter, staff=staff_filter) }}">Previous</a>
+                <a class="page-link bg-dark text-warning border-secondary" href="{{ url_for('pos.sales_history', page=page-1, payment=payment_filter, staff=staff_filter) }}">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
             </li>
             {% endif %}
             <li class="page-item disabled">
-                <span class="page-link bg-dark text-secondary border-secondary">Page {{ page }} of {{ total_pages }}</span>
+                <span class="page-link bg-dark text-secondary border-secondary">{{ page }} / {{ total_pages }}</span>
             </li>
             {% if page < total_pages %}
             <li class="page-item">
-                <a class="page-link bg-dark text-warning border-secondary" href="{{ url_for('pos.sales_history', page=page+1, payment=payment_filter, staff=staff_filter) }}">Next</a>
+                <a class="page-link bg-dark text-warning border-secondary" href="{{ url_for('pos.sales_history', page=page+1, payment=payment_filter, staff=staff_filter) }}">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
             </li>
             {% endif %}
         </ul>
@@ -88,7 +97,8 @@
 
     {% else %}
     <div class="text-center text-secondary py-5">
-        <p class="fs-5">No sales yet</p>
+        <i class="bi bi-clock" style="font-size: 4rem;"></i>
+        <p class="fs-5 mt-3">No sales yet</p>
     </div>
     {% endif %}
 </div>
