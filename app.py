@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, send_from_directory
 from models import db
 from routes import auth_bp, pos_bp, inventory_bp, reports_bp, admin_bp, orders_bp, analytics_bp
 
@@ -22,6 +22,10 @@ def create_app():
     app.register_blueprint(admin_bp)
     app.register_blueprint(orders_bp)
     app.register_blueprint(analytics_bp)
+
+    @app.route('/sw.js')
+    def service_worker():
+        return send_from_directory(os.path.join(app.root_path, 'static'), 'sw.js', mimetype='application/javascript')
 
     with app.app_context():
         db.create_all()
