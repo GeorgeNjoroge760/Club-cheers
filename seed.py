@@ -15,7 +15,9 @@ with app.app_context():
     db.session.add(admin)
 
     for name in ['Alice', 'Bob']:
-        db.session.add(Staff(name=name, role='attendant'))
+        staff = Staff(name=name, role='attendant')
+        staff.set_password('1234')
+        db.session.add(staff)
 
     categories = ['Beer', 'Spirits', 'Wine', 'Soft Drinks', 'Snacks']
     for i, cat in enumerate(categories):
@@ -51,4 +53,4 @@ with app.app_context():
     db.session.commit()
     print("Database seeded successfully!")
     print("Admin login: admin / admin123")
-    print("Attendants: Alice, Bob")
+    print("Attendants: Alice (PIN: 1234), Bob (PIN: 1234)")

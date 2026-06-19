@@ -4,17 +4,17 @@
     <div class="text-center mb-5">
         <i class="bi bi-cup-straw text-warning" style="font-size: 5rem;"></i>
         <h1 class="mt-3 fw-bold" style="color: #166534;">Cheers Club</h1>
-        <p class="text-secondary lead">Select attendant to start</p>
+        <p class="text-secondary lead">Tap your name to start</p>
     </div>
     <div class="d-flex flex-column flex-sm-row flex-wrap justify-content-center gap-3 w-100" style="max-width: 600px;">
         {% for s in staff %}
-        <form method="POST" action="{{ url_for('auth.select_staff') }}" class="flex-fill">
-            <input type="hidden" name="staff_id" value="{{ s.id }}">
-            <button type="submit" class="btn btn-staff w-100 py-4" style="border-color: #166534;">
+        <div class="flex-fill">
+            <button type="button" class="btn btn-staff w-100 py-4" style="border-color: #166534;"
+                    onclick="openStaffModal({{ s.id }}, '{{ s.name }}')">
                 <div class="fs-2 fw-bold" style="color: #166534;">{{ s.name }}</div>
                 <div class="small text-secondary"><i class="bi bi-person-badge"></i> Attendant</div>
             </button>
-        </form>
+        </div>
         {% endfor %}
     </div>
     <div class="mt-5">
@@ -23,4 +23,58 @@
         </a>
     </div>
 </div>
+
+<!-- Password Modal -->
+<div class="modal fade" id="passwordModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-light">
+            <div class="modal-header" style="background: #166534; color: #fff;">
+                <h6 class="modal-title"><i class="bi bi-person-check"></i> <span id="modalStaffName"></span></h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('auth.select_staff') }}">
+                <div class="modal-body">
+                    <input type="hidden" name="staff_id" id="modalStaffId">
+                    <div class="mb-0">
+                        <label class="form-label text-secondary small">Enter PIN to continue</label>
+                        <input type="password" name="password" class="form-control form-control-lg text-center"
+                               placeholder="PIN" required autocomplete="off"
+                               inputmode="numeric" pattern="[0-9]*">
+                    </div>
+                    <div id="passwordError" class="text-danger small mb-2 {% if not error %}d-none{% endif %}">
+                        <i class="bi bi-exclamation-triangle"></i> {{ error }}
+                    </div>
+                </div>
+                <div class="modal-footer border-light">
+                    <button type="submit" class="btn w-100" style="background: #166534; color: #fff; border-radius: 10px;">
+                        <i class="bi bi-box-arrow-in-right"></i> Login
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function openStaffModal(id, name) {
+    document.getElementById('modalStaffId').value = id;
+    document.getElementById('modalStaffName').textContent = name;
+    document.querySelector('#passwordModal input[name="password"]').value = '';
+    document.getElementById('passwordError').classList.add('d-none');
+    var modal = new bootstrap.Modal(document.getElementById('passwordModal'));
+    modal.show();
+    setTimeout(function() {
+        document.querySelector('#passwordModal input[name="password"]').focus();
+    }, 300);
+}
+
+{% if error %}
+document.addEventListener('DOMContentLoaded', function() {
+    openStaffModal({{ last_staff_id or '0' }}, '{{ last_staff_name or '' }}');
+});
+{% endif %}
+</script>
 {% endblock %}
