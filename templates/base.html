@@ -29,6 +29,7 @@
                 <span class="badge bg-warning text-dark ms-1">Admin</span>
                 {% endif %}
             </span>
+            {% block navbar_cart %}{% endblock %}
             <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-light btn-sm">
                 <i class="bi bi-box-arrow-right"></i> <span class="d-none d-sm-inline">Logout</span>
             </a>

@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 {% block body_class %}pos-layout{% endblock %}
+{% block navbar_cart %}
+<div class="d-md-none position-relative me-2">
+    <button class="btn btn-sm btn-outline-light position-relative" onclick="openMobileCart()">
+        <i class="bi bi-cart-fill"></i>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartBadge" style="display: none; font-size: 0.6rem;">0</span>
+    </button>
+</div>
+{% endblock %}
 {% block content %}
 
 <div class="row g-0" style="height: calc(100vh - 56px);">
@@ -38,14 +46,6 @@
             {% include "_cart_footer.html" %}
         </div>
     </div>
-</div>
-
-<div class="d-md-none position-fixed bottom-0 end-0 m-3" style="z-index: 1030;">
-    <button class="btn btn-warning rounded-circle shadow-lg position-relative" style="width: 60px; height: 60px; font-size: 1.5rem;"
-            onclick="openMobileCart()" id="cartFab">
-        <i class="bi bi-cart-fill"></i>
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartBadge" style="display: none;">0</span>
-    </button>
 </div>
 
 <div class="offcanvas offcanvas-bottom d-md-none" tabindex="-1" id="mobileCart" style="height: 75vh; border-radius: 16px 16px 0 0;">
