@@ -13,7 +13,8 @@
         <span class="navbar-brand mb-0 h1">
             <span class="text-warning">&#127866;</span> Cheers Club
         </span>
-        <div class="d-flex align-items-center gap-3">
+        <div class="d-flex align-items-center gap-2">
+            <a href="{{ url_for('pos.sales_history') }}" class="btn btn-outline-warning btn-sm">Sales</a>
             <span class="text-light small">{{ session.get('staff_name') }}
                 {% if session.get('role') == 'admin' %}
                 <span class="badge bg-warning text-dark ms-1">Admin</span>

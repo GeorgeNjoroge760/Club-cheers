@@ -33,7 +33,7 @@ def pos():
                     'total': si.qty * si.unit_price
                 } for si in sale.items],
                 'total': sale.total,
-                'payment_method': sale.payment_method.title(),
+                'payment_method': 'M-Pesa' if sale.payment_method == 'mpesa' else sale.payment_method.title(),
                 'staff': sale.staff.name,
                 'time': sale.created_at.strftime('%d/%m/%Y %H:%M')
             }
@@ -155,3 +155,38 @@ def checkout():
 
 def calc_total(cart):
     return round(sum(item['total'] for item in cart), 2)
+
+
+@pos_bp.route('/sales')
+def sales_history():
+    if not pos_required():
+        return redirect(url_for('auth.staff_select'))
+
+    staff_id = session.get('staff_id')
+    role = session.get('role')
+
+    page = request.args.get('page', 1, type=int)
+    per_page = 20
+
+    query = Sale.query
+    if role != 'admin':
+        query = query.filter_by(staff_id=staff_id)
+
+    sales = query.order_by(Sale.created_at.desc()).paginate(page=page, per_page=per_page, error_out=False)
+
+    sales_data = []
+    for s in sales.items:
+        sales_data.append({
+            'id': s.id,
+            'staff': s.staff.name,
+            'total': s.total,
+            'payment_method': 'M-Pesa' if s.payment_method == 'mpesa' else s.payment_method.title(),
+            'items_count': sum(si.qty for si in s.items),
+            'time': s.created_at.strftime('%d/%m/%Y %H:%M')
+        })
+
+    return render_template('sales_history.html',
+                           sales=sales_data,
+                           page=page,
+                           total_pages=sales.pages,
+                           role=role)

@@ -53,6 +53,13 @@
                 <span class="text-light">Total:</span>
                 <span class="fs-4 fw-bold text-warning" id="cartTotal">KES {{ "%.0f"|format(cart|sum(attribute='total')) }}</span>
             </div>
+            <div class="mb-2">
+                <select class="form-select bg-dark text-light border-secondary" id="paymentMethod">
+                    <option value="cash">Cash</option>
+                    <option value="card">Card</option>
+                    <option value="mpesa">M-Pesa</option>
+                </select>
+            </div>
             <div class="d-grid gap-2">
                 <button class="btn btn-success btn-lg" id="checkoutBtn" onclick="checkout()">Charge</button>
             </div>
@@ -60,30 +67,9 @@
     </div>
 </div>
 
-<!-- Payment Modal -->
-<div class="modal fade" id="paymentModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark border-secondary">
-            <div class="modal-header border-secondary">
-                <h5 class="modal-title text-light">Select Payment Method</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="checkoutForm" method="POST" action="{{ url_for('pos.checkout') }}">
-                    <div class="d-grid gap-3">
-                        <button type="button" class="btn btn-outline-warning btn-lg py-3" onclick="submitPayment('cash')">
-                            <span class="fs-4">&#128176;</span> Cash
-                        </button>
-                        <button type="button" class="btn btn-outline-light btn-lg py-3" onclick="submitPayment('card')">
-                            <span class="fs-4">&#128179;</span> Card
-                        </button>
-                    </div>
-                    <input type="hidden" name="payment_method" id="paymentMethod">
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+<form id="checkoutForm" method="POST" action="{{ url_for('pos.checkout') }}">
+    <input type="hidden" name="payment_method" id="paymentMethodInput">
+</form>
 
 <!-- Receipt Modal -->
 <div class="modal fade" id="receiptModal" tabindex="-1" data-bs-backdrop="static">
@@ -115,7 +101,10 @@
                     <span class="text-warning">KES {{ "%.0f"|format(receipt.total) }}</span>
                 </div>
                 <div class="text-center mt-2">
-                    <span class="badge {% if receipt.payment_method == 'Cash' %}bg-success{% else %}bg-info{% endif %} fs-6">
+                    <span class="badge fs-6
+                        {% if receipt.payment_method == 'Cash' %}bg-success
+                        {% elif receipt.payment_method == 'M-Pesa' %}bg-warning text-dark
+                        {% else %}bg-info{% endif %}">
                         {{ receipt.payment_method }}
                     </span>
                 </div>
@@ -138,7 +127,6 @@
 const cartTotal = document.getElementById('cartTotal');
 const cartItems = document.getElementById('cartItems');
 const checkoutBtn = document.getElementById('checkoutBtn');
-const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
 
 function addToCart(productId, name, price) {
     fetch('{{ url_for("pos.cart_add") }}', {
@@ -199,11 +187,8 @@ function updateCartUI(data) {
 function checkout() {
     const items = document.querySelectorAll('.cart-item');
     if (items.length === 0) return;
-    paymentModal.show();
-}
-
-function submitPayment(method) {
-    document.getElementById('paymentMethod').value = method;
+    const method = document.getElementById('paymentMethod').value;
+    document.getElementById('paymentMethodInput').value = method;
     document.getElementById('checkoutForm').submit();
 }
 
