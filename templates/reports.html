@@ -91,6 +91,7 @@
                         <th>Total</th>
                         <th>Payment</th>
                         <th>Time</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -106,10 +107,15 @@
                                 {% if sale.payment_method == 'mpesa' %}M-Pesa{% else %}{{ sale.payment_method|title }}{% endif %}
                             </span>
                         </td>
-                        <td class="text-muted">{{ sale.created_at.strftime('%d/%m %H:%M') }}</td>
+                        <td class="text-muted">
+                            {{ sale.created_at.strftime('%d/%m %H:%M') }}
+                            <button class="btn btn-sm btn-outline-warning ms-1 py-0" onclick="viewReceipt({{ sale.id }})" title="Receipt">
+                                <i class="bi bi-receipt"></i>
+                            </button>
+                        </td>
                     </tr>
                     {% else %}
-                    <tr><td colspan="6" class="text-center text-muted">No transactions yet</td></tr>
+                    <tr><td colspan="7" class="text-center text-muted">No transactions yet</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -122,4 +128,95 @@
         </a>
     </div>
 </div>
+
+<!-- Receipt Modal -->
+<div class="modal fade" id="receiptModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content border-light">
+            <div class="modal-header border-light" style="background: #166534; color: #fff;">
+                <h5 class="modal-title text-warning"><i class="bi bi-receipt"></i> Receipt</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="receiptBody" style="font-family: monospace; font-size: 13px;">
+                <div class="text-center py-3 text-muted">Loading...</div>
+            </div>
+            <div class="modal-footer border-light d-flex justify-content-between">
+                <button class="btn btn-sm btn-outline-dark" onclick="printReceiptModal()">
+                    <i class="bi bi-printer"></i> Print
+                </button>
+                <button class="btn btn-sm btn-success" id="whatsappBtn" onclick="sendWhatsApp()" style="display:none;">
+                    <i class="bi bi-whatsapp"></i> WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+let currentReceiptData = null;
+
+function viewReceipt(saleId) {
+    const modal = new bootstrap.Modal(document.getElementById('receiptModal'));
+    document.getElementById('receiptBody').innerHTML = '<div class="text-center py-3 text-muted">Loading...</div>';
+    modal.show();
+
+    fetch('/sales/' + saleId + '/receipt')
+        .then(r => r.json())
+        .then(data => {
+            currentReceiptData = data;
+            let html = `
+                <div class="text-center mb-2">
+                    <strong style="color: #166534;">Cheers Club</strong>
+                    <div class="small text-muted">Receipt #${data.id}</div>
+                </div>
+                <hr class="my-1">
+                <div class="small text-muted mb-1">${data.staff} | ${data.time}</div>
+                <hr class="my-1">
+                <table class="w-100 small">
+                    <tr><th class="text-start">Item</th><th class="text-center">Qty</th><th class="text-end">Total</th></tr>`;
+            data.items.forEach(function(item) {
+                html += `<tr><td>${item.name}</td><td class="text-center">${item.qty}</td><td class="text-end">KES ${item.total.toFixed(0)}</td></tr>`;
+            });
+            html += `
+                </table>
+                <hr class="my-1">
+                <div class="d-flex justify-content-between fw-bold fs-6">
+                    <span>TOTAL</span>
+                    <span>KES ${data.total.toFixed(0)}</span>
+                </div>
+                <div class="small text-muted text-center mt-1">${data.payment_method}</div>
+                <hr class="my-1">
+                <div class="small text-muted text-center">Thank you!</div>`;
+            document.getElementById('receiptBody').innerHTML = html;
+            document.getElementById('whatsappBtn').style.display = 'block';
+        })
+        .catch(() => {
+            document.getElementById('receiptBody').innerHTML = '<div class="text-center text-danger">Failed to load receipt</div>';
+        });
+}
+
+function printReceiptModal() {
+    const content = document.getElementById('receiptBody').innerHTML;
+    const win = window.open('', '', 'width=300,height=600');
+    win.document.write('<html><head><title>Receipt</title><style>body{font-family:monospace;font-size:13px;padding:16px;}</style></head><body>');
+    win.document.write('<div class="text-center mb-2"><strong style="color:#166534;">Cheers Club</strong></div>');
+    win.document.write(content);
+    win.document.write('</body></html>');
+    win.document.close();
+    win.focus();
+    win.print();
+}
+
+function sendWhatsApp() {
+    if (!currentReceiptData) return;
+    const data = currentReceiptData;
+    let msg = `*Cheers Club Receipt #${data.id}*\n${data.staff} | ${data.time}\n\n`;
+    data.items.forEach(i => { msg += `${i.name} x${i.qty} = KES ${i.total.toFixed(0)}\n`; });
+    msg += `\n*TOTAL: KES ${data.total.toFixed(0)}*\n${data.payment_method}`;
+    window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+}
+</script>
 {% endblock %}
