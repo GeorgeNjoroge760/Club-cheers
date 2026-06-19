@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container p-3">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="text-light mb-0"><i class="bi bi-box-seam-fill text-warning"></i> Products</h4>
+        <h4 class="text-dark mb-0"><i class="bi bi-box-seam-fill text-warning"></i> Products</h4>
         <div class="d-flex gap-2">
             <a href="{{ url_for('inventory.stock_in') }}" class="btn btn-success btn-sm fw-bold">
                 <i class="bi bi-box-arrow-in-down"></i> Stock In
@@ -13,9 +13,9 @@
         </div>
     </div>
 
-    <div class="card bg-dark border-secondary">
+    <div class="card border-light">
         <div class="table-responsive">
-            <table class="table table-dark table-striped mb-0">
+            <table class="table table-striped mb-0">
                 <thead>
                     <tr>
                         <th>Product</th>
@@ -40,7 +40,7 @@
                         </td>
                         <td>
                             <div class="d-flex gap-1">
-                                <a href="{{ url_for('inventory.product_edit', product_id=p.id) }}" class="btn btn-sm btn-outline-light">
+                                <a href="{{ url_for('inventory.product_edit', product_id=p.id) }}" class="btn btn-sm btn-outline-dark">
                                     <i class="bi bi-pencil"></i>
                                 </a>
                                 <form method="POST" action="{{ url_for('inventory.product_toggle', product_id=p.id) }}" class="d-inline">

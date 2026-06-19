@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container p-3">
-    <h4 class="text-light mb-3"><i class="bi bi-file-earmark-text-fill text-warning"></i> Reports</h4>
+    <h4 class="text-dark mb-3"><i class="bi bi-file-earmark-text-fill text-warning"></i> Reports</h4>
 
     <div class="row g-2 g-md-3 mb-4">
         <div class="col-4">
-            <div class="card bg-dark border-secondary text-center p-3 h-100">
+            <div class="card border-light text-center p-3 h-100">
                 <i class="bi bi-calendar-day text-warning fs-2"></i>
                 <div class="text-secondary small mt-1">Today</div>
                 <div class="fs-5 fw-bold text-warning">KES {{ "%.0f"|format(today_stats.total) }}</div>
@@ -14,7 +14,7 @@
             </div>
         </div>
         <div class="col-4">
-            <div class="card bg-dark border-secondary text-center p-3 h-100">
+            <div class="card border-light text-center p-3 h-100">
                 <i class="bi bi-calendar-week text-info fs-2"></i>
                 <div class="text-secondary small mt-1">This Week</div>
                 <div class="fs-5 fw-bold text-info">KES {{ "%.0f"|format(week_stats.total) }}</div>
@@ -22,10 +22,10 @@
             </div>
         </div>
         <div class="col-4">
-            <div class="card bg-dark border-secondary text-center p-3 h-100">
-                <i class="bi bi-calendar-month text-light fs-2"></i>
+            <div class="card border-light text-center p-3 h-100">
+                <i class="bi bi-calendar-month text-dark fs-2"></i>
                 <div class="text-secondary small mt-1">This Month</div>
-                <div class="fs-5 fw-bold text-light">KES {{ "%.0f"|format(month_stats.total) }}</div>
+                <div class="fs-5 fw-bold text-dark">KES {{ "%.0f"|format(month_stats.total) }}</div>
                 <div class="small text-success">+KES {{ "%.0f"|format(month_stats.profit) }}</div>
             </div>
         </div>
@@ -33,12 +33,12 @@
 
     <div class="row g-2 g-md-3">
         <div class="col-md-6">
-            <div class="card bg-dark border-secondary h-100 mb-2 mb-md-0">
-                <div class="card-header border-secondary">
-                    <h6 class="mb-0 text-light"><i class="bi bi-trophy"></i> Top Products Today</h6>
+            <div class="card border-light h-100 mb-2 mb-md-0">
+                <div class="card-header border-light">
+                    <h6 class="mb-0 text-dark"><i class="bi bi-trophy"></i> Top Products Today</h6>
                 </div>
                 <div class="card-body p-0">
-                    <table class="table table-dark table-striped mb-0 small">
+                    <table class="table table-striped mb-0 small">
                         <thead>
                             <tr><th>Product</th><th class="text-end">Qty Sold</th></tr>
                         </thead>
@@ -55,12 +55,12 @@
         </div>
 
         <div class="col-md-6">
-            <div class="card bg-dark border-secondary h-100">
-                <div class="card-header border-secondary">
-                    <h6 class="mb-0 text-light"><i class="bi bi-people"></i> Staff Today</h6>
+            <div class="card border-light h-100">
+                <div class="card-header border-light">
+                    <h6 class="mb-0 text-dark"><i class="bi bi-people"></i> Staff Today</h6>
                 </div>
                 <div class="card-body p-0">
-                    <table class="table table-dark table-striped mb-0 small">
+                    <table class="table table-striped mb-0 small">
                         <thead>
                             <tr><th>Staff</th><th class="text-center">Sales</th><th class="text-end">Total</th></tr>
                         </thead>
@@ -77,12 +77,12 @@
         </div>
     </div>
 
-    <div class="card bg-dark border-secondary mt-3">
-        <div class="card-header border-secondary">
-            <h6 class="mb-0 text-light"><i class="bi bi-list-ul"></i> Recent Transactions</h6>
+    <div class="card border-light mt-3">
+        <div class="card-header border-light">
+            <h6 class="mb-0 text-dark"><i class="bi bi-list-ul"></i> Recent Transactions</h6>
         </div>
         <div class="table-responsive">
-            <table class="table table-dark table-striped mb-0 small">
+            <table class="table table-striped mb-0 small">
                 <thead>
                     <tr>
                         <th>#</th>

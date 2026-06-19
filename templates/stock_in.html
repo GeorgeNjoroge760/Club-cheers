@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container p-3" style="max-width: 500px;">
-    <h4 class="text-light mb-3"><i class="bi bi-box-arrow-in-down text-success"></i> Record Stock In</h4>
+    <h4 class="text-dark mb-3"><i class="bi bi-box-arrow-in-down text-success"></i> Record Stock In</h4>
     <form method="POST">
         <div class="mb-3">
             <label class="form-label"><i class="bi bi-box-seam"></i> Product</label>
-            <select name="product_id" class="form-select bg-dark text-light border-secondary" required>
+            <select name="product_id" class="form-select " required>
                 <option value="">Select product...</option>
                 {% for p in products %}
                 <option value="{{ p.id }}">{{ p.name }} ({{ "%.0f"|format(p.stock_qty) }} in stock)</option>
@@ -15,16 +15,16 @@
         <div class="row g-2">
             <div class="col-6 mb-3">
                 <label class="form-label"><i class="bi bi-hash"></i> Quantity</label>
-                <input type="number" name="qty" class="form-control bg-dark text-light border-secondary" step="0.5" required>
+                <input type="number" name="qty" class="form-control " step="0.5" required>
             </div>
             <div class="col-6 mb-3">
                 <label class="form-label"><i class="bi bi-currency-dollar"></i> Cost/Unit</label>
-                <input type="number" name="cost_per_unit" class="form-control bg-dark text-light border-secondary" step="0.5" value="0">
+                <input type="number" name="cost_per_unit" class="form-control " step="0.5" value="0">
             </div>
         </div>
         <div class="mb-3">
             <label class="form-label"><i class="bi bi-sticky"></i> Note (optional)</label>
-            <input type="text" name="note" class="form-control bg-dark text-light border-secondary" placeholder="e.g. Supplier name">
+            <input type="text" name="note" class="form-control " placeholder="e.g. Supplier name">
         </div>
         <div class="d-grid gap-2">
             <button type="submit" class="btn btn-success fw-bold"><i class="bi bi-check-lg"></i> Record Stock In</button>

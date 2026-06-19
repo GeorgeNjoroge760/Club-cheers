@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -10,7 +10,7 @@
 </head>
 <body class="{% block body_class %}{% endblock %}">
     {% if session.get('staff_name') %}
-    <nav class="navbar navbar-dark bg-dark border-bottom border-secondary px-2 px-md-3">
+    <nav class="navbar navbar-dark bg-success px-2 px-md-3">
         <div class="d-flex align-items-center">
             <button class="btn btn-sm btn-outline-warning me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#navMenu">
                 <i class="bi bi-list fs-5"></i>
@@ -31,44 +31,44 @@
         </div>
     </nav>
 
-    <div class="offcanvas offcanvas-start bg-dark text-light" tabindex="-1" id="navMenu">
-        <div class="offcanvas-header border-bottom border-secondary">
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="navMenu">
+        <div class="offcanvas-header border-bottom">
             <h5 class="offcanvas-title text-warning"><i class="bi bi-cup-straw"></i> Cheers Club</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body p-0">
             <div class="list-group list-group-flush">
                 {% if session.get('role') == 'admin' %}
-                    <a href="{{ url_for('admin.dashboard') }}" class="list-group-item list-group-item-action bg-dark text-light border-secondary py-3">
+                    <a href="{{ url_for('admin.dashboard') }}" class="list-group-item list-group-item-action border-light py-3">
                         <i class="bi bi-grid-1x2-fill text-warning me-2"></i> Dashboard
                     </a>
-                    <a href="{{ url_for('orders.orders') }}" class="list-group-item list-group-item-action bg-dark text-light border-secondary py-3">
+                    <a href="{{ url_for('orders.orders') }}" class="list-group-item list-group-item-action border-light py-3">
                         <i class="bi bi-receipt text-warning me-2"></i> Orders
                     </a>
-                    <a href="{{ url_for('inventory.inventory') }}" class="list-group-item list-group-item-action bg-dark text-light border-secondary py-3">
+                    <a href="{{ url_for('inventory.inventory') }}" class="list-group-item list-group-item-action border-light py-3">
                         <i class="bi bi-box-seam-fill text-warning me-2"></i> Products
                     </a>
-                    <a href="{{ url_for('admin.staff_list') }}" class="list-group-item list-group-item-action bg-dark text-light border-secondary py-3">
+                    <a href="{{ url_for('admin.staff_list') }}" class="list-group-item list-group-item-action border-light py-3">
                         <i class="bi bi-people-fill text-warning me-2"></i> Users
                     </a>
-                    <a href="{{ url_for('pos.sales_history') }}" class="list-group-item list-group-item-action bg-dark text-light border-secondary py-3">
+                    <a href="{{ url_for('pos.sales_history') }}" class="list-group-item list-group-item-action border-light py-3">
                         <i class="bi bi-credit-card-2-front-fill text-warning me-2"></i> Sales
                     </a>
-                    <a href="{{ url_for('analytics.analytics') }}" class="list-group-item list-group-item-action bg-dark text-light border-secondary py-3">
+                    <a href="{{ url_for('analytics.analytics') }}" class="list-group-item list-group-item-action border-light py-3">
                         <i class="bi bi-graph-up-arrow text-warning me-2"></i> Analytics
                     </a>
-                    <a href="{{ url_for('reports.reports') }}" class="list-group-item list-group-item-action bg-dark text-light border-secondary py-3">
+                    <a href="{{ url_for('reports.reports') }}" class="list-group-item list-group-item-action border-light py-3">
                         <i class="bi bi-file-earmark-text-fill text-warning me-2"></i> Reports
                     </a>
-                    <hr class="border-secondary my-2">
-                    <a href="{{ url_for('admin.change_password') }}" class="list-group-item list-group-item-action bg-dark text-light border-secondary py-3">
+                    <hr class="my-2">
+                    <a href="{{ url_for('admin.change_password') }}" class="list-group-item list-group-item-action border-light py-3">
                         <i class="bi bi-shield-lock-fill text-warning me-2"></i> Change Password
                     </a>
                 {% else %}
-                    <a href="{{ url_for('pos.pos') }}" class="list-group-item list-group-item-action bg-dark text-light border-secondary py-3">
+                    <a href="{{ url_for('pos.pos') }}" class="list-group-item list-group-item-action border-light py-3">
                         <i class="bi bi-cart-fill text-warning me-2"></i> POS
                     </a>
-                    <a href="{{ url_for('pos.sales_history') }}" class="list-group-item list-group-item-action bg-dark text-light border-secondary py-3">
+                    <a href="{{ url_for('pos.sales_history') }}" class="list-group-item list-group-item-action border-light py-3">
                         <i class="bi bi-clock-history text-warning me-2"></i> My Sales
                     </a>
                 {% endif %}

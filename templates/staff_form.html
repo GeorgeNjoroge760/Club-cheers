@@ -1,25 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container p-3" style="max-width: 500px;">
-    <h4 class="text-light mb-3">
+    <h4 class="text-dark mb-3">
         <i class="bi {% if staff %}bi-pencil-square{% else %}bi-person-plus{% endif %} text-warning"></i>
         {% if staff %}Edit Staff{% else %}Add Staff{% endif %}
     </h4>
     <form method="POST">
         <div class="mb-3">
             <label class="form-label"><i class="bi bi-person"></i> Name</label>
-            <input type="text" name="name" class="form-control bg-dark text-light border-secondary" value="{{ staff.name if staff else '' }}" required>
+            <input type="text" name="name" class="form-control " value="{{ staff.name if staff else '' }}" required>
         </div>
         <div class="mb-3">
             <label class="form-label"><i class="bi bi-shield"></i> Role</label>
-            <select name="role" class="form-select bg-dark text-light border-secondary">
+            <select name="role" class="form-select ">
                 <option value="attendant" {% if staff and staff.role == 'attendant' %}selected{% endif %}>Attendant</option>
                 <option value="admin" {% if staff and staff.role == 'admin' %}selected{% endif %}>Admin</option>
             </select>
         </div>
         <div class="mb-3">
             <label class="form-label"><i class="bi bi-lock"></i> {% if staff %}New Password (leave blank to keep){% else %}Password{% endif %}</label>
-            <input type="password" name="password" class="form-control bg-dark text-light border-secondary" {% if not staff %}required{% endif %}>
+            <input type="password" name="password" class="form-control " {% if not staff %}required{% endif %}>
         </div>
         <div class="d-grid gap-2">
             <button type="submit" class="btn btn-warning fw-bold"><i class="bi bi-check-lg"></i> Save</button>

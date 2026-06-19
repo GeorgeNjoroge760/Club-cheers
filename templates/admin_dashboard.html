@@ -1,26 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container p-3">
-    <h4 class="text-light mb-3"><i class="bi bi-grid-1x2-fill text-warning"></i> Dashboard</h4>
+    <h4 class="text-dark mb-3"><i class="bi bi-grid-1x2-fill text-warning"></i> Dashboard</h4>
 
     <div class="row g-2 g-md-3 mb-4">
         <div class="col-6 col-md-4">
-            <div class="card bg-dark border-secondary text-center p-3 h-100">
+            <div class="card border-light text-center p-3 h-100">
                 <i class="bi bi-cash-stack text-warning fs-2"></i>
                 <div class="text-secondary small mt-1">Today Sales</div>
-                <div class="fs-4 fw-bold text-light">KES {{ "%.0f"|format(today_total) }}</div>
+                <div class="fs-4 fw-bold text-dark">KES {{ "%.0f"|format(today_total) }}</div>
                 <div class="small text-muted">{{ today_count }} transactions</div>
             </div>
         </div>
         <div class="col-6 col-md-4">
-            <div class="card bg-dark border-secondary text-center p-3 h-100">
+            <div class="card border-light text-center p-3 h-100">
                 <i class="bi bi-calendar-month text-info fs-2"></i>
                 <div class="text-secondary small mt-1">Month Sales</div>
                 <div class="fs-4 fw-bold text-info">KES {{ "%.0f"|format(month_total) }}</div>
             </div>
         </div>
         <div class="col-6 col-md-4">
-            <div class="card bg-dark border-secondary text-center p-3 h-100">
+            <div class="card border-light text-center p-3 h-100">
                 <i class="bi bi-box-seam text-primary fs-2"></i>
                 <div class="text-secondary small mt-1">Active Products</div>
                 <div class="fs-4 fw-bold text-primary">{{ product_count }}</div>
@@ -29,16 +29,16 @@
         </div>
     </div>
 
-    <div class="card bg-dark border-secondary mb-3">
-        <div class="card-header border-secondary d-flex justify-content-between align-items-center">
-            <h6 class="mb-0 text-light"><i class="bi bi-clock-history"></i> Recent Orders</h6>
+    <div class="card border-light mb-3">
+        <div class="card-header border-light d-flex justify-content-between align-items-center">
+            <h6 class="mb-0 text-dark"><i class="bi bi-clock-history"></i> Recent Orders</h6>
             <a href="{{ url_for('orders.orders') }}" class="btn btn-sm btn-outline-warning">
                 <i class="bi bi-eye"></i> View All
             </a>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-dark table-striped mb-0 small">
+                <table class="table table-striped mb-0 small">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -78,7 +78,7 @@
             </a>
         </div>
         <div class="col-6 col-md-3">
-            <a href="{{ url_for('orders.orders') }}" class="btn btn-outline-light w-100 py-3 fw-bold">
+            <a href="{{ url_for('orders.orders') }}" class="btn btn-outline-dark w-100 py-3 fw-bold">
                 <i class="bi bi-receipt fs-5 d-block d-md-inline"></i> Orders
             </a>
         </div>

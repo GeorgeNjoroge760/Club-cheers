@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container p-3" style="max-width: 500px;">
-    <h4 class="text-light mb-3">
+    <h4 class="text-dark mb-3">
         <i class="bi {% if product %}bi-pencil-square{% else %}bi-plus-circle{% endif %} text-warning"></i>
         {% if product %}Edit Product{% else %}Add Product{% endif %}
     </h4>
     <form method="POST">
         <div class="mb-3">
             <label class="form-label"><i class="bi bi-tag"></i> Name</label>
-            <input type="text" name="name" class="form-control bg-dark text-light border-secondary" value="{{ product.name if product else '' }}" required>
+            <input type="text" name="name" class="form-control " value="{{ product.name if product else '' }}" required>
         </div>
         <div class="mb-3">
             <label class="form-label"><i class="bi bi-folder"></i> Category</label>
-            <select name="category_id" class="form-select bg-dark text-light border-secondary" required>
+            <select name="category_id" class="form-select " required>
                 {% for cat in categories %}
                 <option value="{{ cat.id }}" {% if product and product.category_id == cat.id %}selected{% endif %}>{{ cat.name }}</option>
                 {% endfor %}
@@ -21,21 +21,21 @@
         <div class="row g-2">
             <div class="col-6 mb-3">
                 <label class="form-label"><i class="bi bi-currency-dollar"></i> Sell Price</label>
-                <input type="number" name="sell_price" class="form-control bg-dark text-light border-secondary" step="0.5" value="{{ product.sell_price if product else '' }}" required>
+                <input type="number" name="sell_price" class="form-control " step="0.5" value="{{ product.sell_price if product else '' }}" required>
             </div>
             <div class="col-6 mb-3">
                 <label class="form-label"><i class="bi bi-cash"></i> Cost Price</label>
-                <input type="number" name="cost_price" class="form-control bg-dark text-light border-secondary" step="0.5" value="{{ product.cost_price if product else '' }}">
+                <input type="number" name="cost_price" class="form-control " step="0.5" value="{{ product.cost_price if product else '' }}">
             </div>
         </div>
         <div class="row g-2">
             <div class="col-6 mb-3">
                 <label class="form-label"><i class="bi bi-box"></i> Stock Qty</label>
-                <input type="number" name="stock_qty" class="form-control bg-dark text-light border-secondary" step="0.5" value="{{ product.stock_qty if product else 0 }}">
+                <input type="number" name="stock_qty" class="form-control " step="0.5" value="{{ product.stock_qty if product else 0 }}">
             </div>
             <div class="col-6 mb-3">
                 <label class="form-label"><i class="bi bi-rulers"></i> Unit</label>
-                <select name="unit" class="form-select bg-dark text-light border-secondary">
+                <select name="unit" class="form-select ">
                     <option value="bottle" {% if product and product.unit == 'bottle' %}selected{% endif %}>Bottle</option>
                     <option value="can" {% if product and product.unit == 'can' %}selected{% endif %}>Can</option>
                     <option value="measure" {% if product and product.unit == 'measure' %}selected{% endif %}>Measure</option>

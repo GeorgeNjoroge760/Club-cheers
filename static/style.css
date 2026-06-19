@@ -1,13 +1,13 @@
 :root {
-    --bg-primary: #0f0f1a;
-    --bg-secondary: #1a1a2e;
-    --bg-card: #16213e;
+    --bg-primary: #f5f5f0;
+    --bg-secondary: #ffffff;
+    --bg-card: #ffffff;
     --accent: #e2a526;
     --accent-hover: #f0b832;
     --danger: #dc3545;
     --success: #27ae60;
     --info: #0dcaf0;
-    --text-primary: #f0f0f0;
+    --text-primary: #222;
     --text-muted: #888;
 }
 
@@ -104,8 +104,8 @@ body.pos-layout {
 }
 
 .btn-product {
-    background: var(--bg-card);
-    border: 1px solid #2a2a4a;
+    background: #fff;
+    border: 1px solid #e0e0e0;
     border-radius: 12px;
     color: var(--text-primary);
     min-height: 85px;
@@ -169,7 +169,7 @@ body.pos-layout {
 }
 
 .bg-dark-light {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(0, 0, 0, 0.03);
 }
 
 .cart-item {
@@ -178,12 +178,8 @@ body.pos-layout {
 }
 
 /* Tables */
-.table-dark {
-    --bs-table-bg: var(--bg-secondary);
-}
-
 .table> :not(caption)>*>* {
-    border-bottom-color: rgba(255, 255, 255, 0.05);
+    border-bottom-color: rgba(0, 0, 0, 0.08);
 }
 
 /* Offcanvas nav */
@@ -194,10 +190,6 @@ body.pos-layout {
 .list-group-item {
     border-left: none;
     border-right: none;
-}
-
-.list-group-item:active {
-    background: var(--bg-card) !important;
 }
 
 /* Scrollbar */
@@ -211,7 +203,7 @@ body.pos-layout {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--bg-card);
+    background: #ccc;
     border-radius: 2px;
 }
 
@@ -236,7 +228,7 @@ body.pos-layout {
     .cart-panel {
         height: auto;
         max-height: 45vh;
-        border-top: 1px solid #333 !important;
+        border-top: 1px solid #ddd !important;
         border-left: none !important;
     }
 
