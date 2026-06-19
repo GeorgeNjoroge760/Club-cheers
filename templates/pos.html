@@ -127,7 +127,6 @@
 
 {% block scripts %}
 <script>
-const cartTotal = document.getElementById('cartTotal');
 const cartItems = document.getElementById('cartItems');
 const mobileCartItems = document.getElementById('mobileCartItems');
 const checkoutBtn = document.getElementById('checkoutBtn');
@@ -137,7 +136,7 @@ let mobileCartOffcanvas = null;
 document.addEventListener('DOMContentLoaded', function() {
     const el = document.getElementById('mobileCart');
     if (el) mobileCartOffcanvas = new bootstrap.Offcanvas(el);
-    updateBadge();
+    updateBadge({{ cart|length }});
 });
 
 function openMobileCart() {
@@ -172,9 +171,8 @@ function clearCart() {
     .then(data => updateCartUI(data));
 }
 
-function updateBadge() {
+function updateBadge(count) {
     if (!cartBadge) return;
-    const count = document.querySelectorAll('.cart-item').length;
     if (count > 0) {
         cartBadge.style.display = 'inline';
         cartBadge.textContent = count;
@@ -209,8 +207,10 @@ function updateCartUI(data) {
     }
     cartItems.innerHTML = html;
     if (mobileCartItems) mobileCartItems.innerHTML = html;
-    cartTotal.textContent = 'KES ' + data.total.toFixed(0);
-    updateBadge();
+    document.querySelectorAll('.cart-total').forEach(el => {
+        el.textContent = 'KES ' + data.total.toFixed(0);
+    });
+    updateBadge(items.length);
 }
 
 function checkout() {
