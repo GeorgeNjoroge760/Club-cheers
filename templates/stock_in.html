@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container p-3" style="max-width: 500px;">
+    <h4 class="text-light mb-3">Record Stock In</h4>
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Product</label>
+            <select name="product_id" class="form-select" required>
+                <option value="">Select product...</option>
+                {% for p in products %}
+                <option value="{{ p.id }}">{{ p.name }} ({{ "%.0f"|format(p.stock_qty) }} {{ p.unit }} in stock)</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="row">
+            <div class="col-6 mb-3">
+                <label class="form-label">Quantity</label>
+                <input type="number" name="qty" class="form-control" step="0.5" required>
+            </div>
+            <div class="col-6 mb-3">
+                <label class="form-label">Cost per Unit (KES)</label>
+                <input type="number" name="cost_per_unit" class="form-control" step="0.5" value="0">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Note (optional)</label>
+            <input type="text" name="note" class="form-control" placeholder="e.g. Supplier name">
+        </div>
+        <button type="submit" class="btn btn-success w-100">Record Stock In</button>
+        <a href="{{ url_for('inventory.inventory') }}" class="btn btn-outline-secondary w-100 mt-2">Cancel</a>
+    </form>
+</div>
+{% endblock %}

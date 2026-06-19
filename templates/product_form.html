@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container p-3" style="max-width: 500px;">
+    <h4 class="text-light mb-3">{% if product %}Edit Product{% else %}Add Product{% endif %}</h4>
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" class="form-control" value="{{ product.name if product else '' }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Category</label>
+            <select name="category_id" class="form-select" required>
+                {% for cat in categories %}
+                <option value="{{ cat.id }}" {% if product and product.category_id == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="row">
+            <div class="col-6 mb-3">
+                <label class="form-label">Sell Price (KES)</label>
+                <input type="number" name="sell_price" class="form-control" step="0.5" value="{{ product.sell_price if product else '' }}" required>
+            </div>
+            <div class="col-6 mb-3">
+                <label class="form-label">Cost Price (KES)</label>
+                <input type="number" name="cost_price" class="form-control" step="0.5" value="{{ product.cost_price if product else '' }}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6 mb-3">
+                <label class="form-label">Stock Qty</label>
+                <input type="number" name="stock_qty" class="form-control" step="0.5" value="{{ product.stock_qty if product else 0 }}">
+            </div>
+            <div class="col-6 mb-3">
+                <label class="form-label">Unit</label>
+                <select name="unit" class="form-select">
+                    <option value="bottle" {% if product and product.unit == 'bottle' %}selected{% endif %}>Bottle</option>
+                    <option value="can" {% if product and product.unit == 'can' %}selected{% endif %}>Can</option>
+                    <option value="measure" {% if product and product.unit == 'measure' %}selected{% endif %}>Measure</option>
+                    <option value="pack" {% if product and product.unit == 'pack' %}selected{% endif %}>Pack</option>
+                    <option value="unit" {% if product and product.unit == 'unit' %}selected{% endif %}>Unit</option>
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-warning w-100">{% if product %}Update{% else %}Add Product{% endif %}</button>
+        <a href="{{ url_for('inventory.inventory') }}" class="btn btn-outline-secondary w-100 mt-2">Cancel</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container p-3">
+    <div class="row g-3 mb-4">
+        <div class="col-4">
+            <div class="card bg-dark border-secondary text-center p-3">
+                <div class="text-secondary small">Today Sales</div>
+                <div class="fs-3 text-warning fw-bold">KES {{ "%.0f"|format(today_stats.total) }}</div>
+                <div class="small text-muted">{{ today_stats.count }} transactions</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card bg-dark border-secondary text-center p-3">
+                <div class="text-secondary small">Today Profit</div>
+                <div class="fs-3 text-success fw-bold">KES {{ "%.0f"|format(today_stats.profit) }}</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card bg-dark border-secondary text-center p-3">
+                <div class="text-secondary small">Month Sales</div>
+                <div class="fs-3 text-light fw-bold">KES {{ "%.0f"|format(month_stats.total) }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2 mb-3">
+        <a href="{{ url_for('inventory.inventory') }}" class="btn btn-outline-warning flex-fill">Inventory</a>
+        <a href="{{ url_for('admin.staff_list') }}" class="btn btn-outline-light flex-fill">Staff</a>
+        <a href="{{ url_for('reports.reports') }}" class="btn btn-outline-info flex-fill">Reports</a>
+        <a href="{{ url_for('admin.change_password') }}" class="btn btn-outline-secondary flex-fill">Password</a>
+    </div>
+
+    <div class="card bg-dark border-secondary">
+        <div class="card-header border-secondary">
+            <h6 class="mb-0 text-light">Recent Sales</h6>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-striped mb-0 small">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Staff</th>
+                            <th>Total</th>
+                            <th>Payment</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sale in recent_sales %}
+                        <tr>
+                            <td>{{ sale.id }}</td>
+                            <td>{{ sale.staff.name }}</td>
+                            <td>KES {{ "%.0f"|format(sale.total) }}</td>
+                            <td>{{ sale.payment_method }}</td>
+                            <td>{{ sale.created_at.strftime('%H:%M') }}</td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="5" class="text-center text-muted">No sales yet</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

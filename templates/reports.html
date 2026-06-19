@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container p-3">
+    <h4 class="text-light mb-3">Reports</h4>
+
+    <div class="row g-3 mb-4">
+        <div class="col-4">
+            <div class="card bg-dark border-secondary text-center p-3">
+                <div class="text-secondary small">Today</div>
+                <div class="fs-4 text-warning fw-bold">KES {{ "%.0f"|format(today_stats.total) }}</div>
+                <div class="small text-success">+KES {{ "%.0f"|format(today_stats.profit) }}</div>
+                <div class="small text-muted">{{ today_stats.count }} sales</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card bg-dark border-secondary text-center p-3">
+                <div class="text-secondary small">This Week</div>
+                <div class="fs-4 text-light fw-bold">KES {{ "%.0f"|format(week_stats.total) }}</div>
+                <div class="small text-success">+KES {{ "%.0f"|format(week_stats.profit) }}</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card bg-dark border-secondary text-center p-3">
+                <div class="text-secondary small">This Month</div>
+                <div class="fs-4 text-light fw-bold">KES {{ "%.0f"|format(month_stats.total) }}</div>
+                <div class="small text-success">+KES {{ "%.0f"|format(month_stats.profit) }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="card bg-dark border-secondary">
+                <div class="card-header border-secondary">
+                    <h6 class="mb-0 text-light">Top Products Today</h6>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-dark table-striped mb-0 small">
+                        <thead>
+                            <tr><th>Product</th><th>Qty Sold</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for name, qty in top_products %}
+                            <tr><td>{{ name }}</td><td>{{ "%.0f"|format(qty) }}</td></tr>
+                            {% else %}
+                            <tr><td colspan="2" class="text-center text-muted">No sales today</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card bg-dark border-secondary">
+                <div class="card-header border-secondary">
+                    <h6 class="mb-0 text-light">Staff Performance Today</h6>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-dark table-striped mb-0 small">
+                        <thead>
+                            <tr><th>Staff</th><th>Sales</th><th>Total</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for name, count, total in staff_sales %}
+                            <tr><td>{{ name }}</td><td>{{ count }}</td><td>KES {{ "%.0f"|format(total) }}</td></tr>
+                            {% else %}
+                            <tr><td colspan="3" class="text-center text-muted">No sales today</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card bg-dark border-secondary mt-3">
+        <div class="card-header border-secondary">
+            <h6 class="mb-0 text-light">Recent Transactions</h6>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-dark table-striped mb-0 small">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Staff</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Payment</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sale in all_sales %}
+                    <tr>
+                        <td>{{ sale.id }}</td>
+                        <td>{{ sale.staff.name }}</td>
+                        <td>{{ sale.items|length }}</td>
+                        <td>KES {{ "%.0f"|format(sale.total) }}</td>
+                        <td><span class="badge {% if sale.payment_method == 'cash' %}bg-success{% else %}bg-info{% endif %}">{{ sale.payment_method }}</span></td>
+                        <td>{{ sale.created_at.strftime('%d/%m %H:%M') }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="6" class="text-center text-muted">No transactions yet</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="{{ url_for('admin.dashboard') }}" class="text-secondary">&larr; Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}
