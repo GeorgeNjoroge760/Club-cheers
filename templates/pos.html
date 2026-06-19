@@ -88,7 +88,7 @@
                 </div>
                 <hr class="border-secondary">
                 <div class="mb-3">
-                    {% for item in receipt.items %}
+                    {% for item in receipt.line_items %}
                     <div class="d-flex justify-content-between small mb-1">
                         <span>{{ item.name }} x{{ "%.0f"|format(item.qty) }}</span>
                         <span>KES {{ "%.0f"|format(item.total) }}</span>

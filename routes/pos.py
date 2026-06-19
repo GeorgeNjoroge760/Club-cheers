@@ -27,7 +27,7 @@ def pos():
         if sale:
             receipt = {
                 'id': sale.id,
-                'items': [{
+                'line_items': [{
                     'name': si.product.name,
                     'qty': si.qty,
                     'total': si.qty * si.unit_price
