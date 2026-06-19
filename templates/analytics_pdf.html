@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Analytics Report - Cheers Club</title>
+<style>
+    @page { size: A4; margin: 15mm; }
+    body { font-family: Helvetica, sans-serif; font-size: 10px; color: #333; }
+    h1 { font-size: 18px; color: #166534; margin-bottom: 4px; }
+    h2 { font-size: 13px; color: #166534; margin: 16px 0 6px; border-bottom: 1px solid #ccc; padding-bottom: 3px; }
+    .subtitle { color: #888; font-size: 9px; margin-bottom: 12px; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+    th { background: #166534; color: #fff; padding: 5px 6px; text-align: left; font-size: 9px; }
+    td { padding: 4px 6px; border-bottom: 1px solid #eee; }
+    .text-right { text-align: right; }
+    .text-center { text-align: center; }
+    .summary { margin-bottom: 14px; }
+    .summary td { border: none; padding: 2px 8px; font-size: 10px; }
+    .summary .label { color: #888; }
+    .summary .value { font-weight: bold; }
+    .footer { position: fixed; bottom: 0; left: 0; right: 0; text-align: center; color: #aaa; font-size: 8px; padding: 10px 0; }
+</style>
+</head>
+<body>
+    <h1>Cheers Club &mdash; Monthly Analytics Report</h1>
+    <div class="subtitle">Generated {{ now }}</div>
+
+    <table class="summary">
+        <tr><td class="label">Month Revenue</td><td class="value">KES {{ "%.0f"|format(monthly_total) }}</td>
+            <td class="label">Month Profit</td><td class="value">KES {{ "%.0f"|format(monthly_profit) }}</td></tr>
+        <tr><td class="label">Transactions</td><td class="value">{{ monthly_count }}</td>
+            <td class="label">Margin</td><td class="value">{{ "%.0f"|format(monthly_profit / monthly_total * 100) if monthly_total > 0 else '0' }}%</td></tr>
+        <tr><td class="label">Avg per Sale</td><td class="value">KES {{ "%.0f"|format(monthly_total / monthly_count) if monthly_count > 0 else '0' }}</td>
+            <td colspan="2"></td></tr>
+    </table>
+
+    <h2>Daily Sales (Last 30 Days)</h2>
+    <table>
+        <tr><th>Date</th><th class="text-right">Revenue</th><th class="text-right">Profit</th><th class="text-center">Sales</th></tr>
+        {% for day in daily_sales %}
+        <tr>
+            <td>{{ day.date }}</td>
+            <td class="text-right">KES {{ "%.0f"|format(day.total) }}</td>
+            <td class="text-right">KES {{ "%.0f"|format(day.profit) }}</td>
+            <td class="text-center">{{ day.count }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Top Products (This Month)</h2>
+    <table>
+        <tr><th>Product</th><th class="text-center">Qty</th><th class="text-right">Revenue</th><th class="text-right">Profit</th></tr>
+        {% for name, qty, total, profit in top_products %}
+        <tr>
+            <td>{{ name }}</td>
+            <td class="text-center">{{ "%.0f"|format(qty) }}</td>
+            <td class="text-right">KES {{ "%.0f"|format(total) }}</td>
+            <td class="text-right">KES {{ "%.0f"|format(profit) }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" style="text-align:center;color:#aaa;">No sales this month</td></tr>
+        {% endfor %}
+    </table>
+
+    <h2>Staff Performance (This Month)</h2>
+    <table>
+        <tr><th>Staff</th><th class="text-center">Sales</th><th class="text-right">Revenue</th><th class="text-right">Profit</th></tr>
+        {% for name, count, total, profit in staff_perf %}
+        <tr>
+            <td>{{ name }}</td>
+            <td class="text-center">{{ count }}</td>
+            <td class="text-right">KES {{ "%.0f"|format(total) }}</td>
+            <td class="text-right">KES {{ "%.0f"|format(profit) }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" style="text-align:center;color:#aaa;">No sales this month</td></tr>
+        {% endfor %}
+    </table>
+
+    <h2>Payment Methods (This Month)</h2>
+    <table>
+        <tr><th>Method</th><th class="text-center">Count</th><th class="text-right">Total</th></tr>
+        {% for method, count, total in payment_breakdown %}
+        <tr>
+            <td>{{ method|title }}</td>
+            <td class="text-center">{{ count }}</td>
+            <td class="text-right">KES {{ "%.0f"|format(total) }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3" style="text-align:center;color:#aaa;">No sales this month</td></tr>
+        {% endfor %}
+    </table>
+
+    <div class="footer">Cheers Club POS &mdash; {{ now }}</div>
+</body>
+</html>
