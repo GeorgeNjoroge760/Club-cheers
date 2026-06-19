@@ -9,6 +9,7 @@
     --info: #0dcaf0;
     --text-primary: #222;
     --text-muted: #888;
+    --nav-bg: #166534;
 }
 
 body {
@@ -25,6 +26,10 @@ body.pos-layout {
 
 .navbar {
     min-height: 56px;
+}
+
+.navbar-emerald {
+    background-color: var(--nav-bg) !important;
 }
 
 /* Cards */
