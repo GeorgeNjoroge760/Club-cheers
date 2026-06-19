@@ -21,6 +21,7 @@ def pos():
     categories = Category.query.order_by(Category.sort_order).all()
     products = Product.query.filter_by(active=True).order_by(Product.category_id, Product.name).all()
     cart = session.get('cart', [])
+    cart_total = calc_total(cart)
 
     receipt = None
     receipt_id = request.args.get('receipt')
@@ -40,7 +41,7 @@ def pos():
                 'time': sale.created_at.strftime('%d/%m/%Y %H:%M')
             }
 
-    return render_template('pos.html', categories=categories, products=products, cart=cart, receipt=receipt)
+    return render_template('pos.html', categories=categories, products=products, cart=cart, cart_total=cart_total, receipt=receipt)
 
 
 @pos_bp.route('/pos/cart/add', methods=['POST'])

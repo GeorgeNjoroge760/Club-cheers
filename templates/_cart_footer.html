@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between align-items-center mb-2">
     <span class="text-dark small">Total:</span>
-    <span class="fs-4 fw-bold text-warning" id="cartTotal">KES {{ "%.0f"|format(cart|sum(attribute='total')) }}</span>
+    <span class="fs-4 fw-bold text-warning" id="cartTotal">KES {{ "%.0f"|format(cart_total) }}</span>
 </div>
 <div class="mb-2">
     <select class="form-select form-select-lg" id="paymentMethod">
