@@ -26,7 +26,7 @@ def orders():
             'staff': s.staff.name,
             'total': s.total,
             'payment_method': 'M-Pesa' if s.payment_method == 'mpesa' else s.payment_method.title(),
-            'items': [{
+            'order_items': [{
                 'name': si.product.name,
                 'qty': si.qty,
                 'unit_price': si.unit_price,
