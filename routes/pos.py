@@ -7,9 +7,11 @@ pos_bp = Blueprint('pos', __name__)
 
 
 def pos_required():
-    if 'role' not in session or session['role'] not in ('attendant', 'admin'):
-        return False
-    return True
+    return session.get('role') == 'attendant'
+
+
+def staff_required():
+    return session.get('role') in ('attendant', 'admin')
 
 
 @pos_bp.route('/pos')
@@ -159,7 +161,7 @@ def calc_total(cart):
 
 @pos_bp.route('/sales/<int:sale_id>/receipt')
 def receipt_json(sale_id):
-    if not pos_required():
+    if not staff_required():
         return {'error': 'Unauthorized'}, 401
 
     sale = Sale.query.get_or_404(sale_id)
@@ -187,7 +189,7 @@ def receipt_json(sale_id):
 
 @pos_bp.route('/sales')
 def sales_history():
-    if not pos_required():
+    if not staff_required():
         return redirect(url_for('auth.staff_select'))
 
     staff_id = session.get('staff_id')
