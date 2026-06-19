@@ -1,11 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-{% if request.args.get('success') %}
-<div class="alert alert-success alert-dismissible fade show m-2 text-center" role="alert">
-    Sale completed! Receipt printed.
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-</div>
-{% endif %}
 
 <div class="row g-0" style="height: calc(100vh - 56px);">
     <div class="col-12 col-md-8 d-flex flex-column p-2">
@@ -90,6 +84,53 @@
         </div>
     </div>
 </div>
+
+<!-- Receipt Modal -->
+<div class="modal fade" id="receiptModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title text-warning">&#128230; Receipt</h5>
+            </div>
+            <div class="modal-body">
+                {% if receipt %}
+                <div class="text-center mb-3">
+                    <div class="fs-5 fw-bold text-light">CHEERS CLUB</div>
+                    <div class="small text-muted">Receipt #{{ receipt.id }}</div>
+                    <div class="small text-muted">{{ receipt.time }}</div>
+                    <div class="small text-muted">Attendant: {{ receipt.staff }}</div>
+                </div>
+                <hr class="border-secondary">
+                <div class="mb-3">
+                    {% for item in receipt.items %}
+                    <div class="d-flex justify-content-between small mb-1">
+                        <span>{{ item.name }} x{{ "%.0f"|format(item.qty) }}</span>
+                        <span>KES {{ "%.0f"|format(item.total) }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                <hr class="border-secondary">
+                <div class="d-flex justify-content-between fs-5 fw-bold">
+                    <span class="text-light">TOTAL</span>
+                    <span class="text-warning">KES {{ "%.0f"|format(receipt.total) }}</span>
+                </div>
+                <div class="text-center mt-2">
+                    <span class="badge {% if receipt.payment_method == 'Cash' %}bg-success{% else %}bg-info{% endif %} fs-6">
+                        {{ receipt.payment_method }}
+                    </span>
+                </div>
+                <hr class="border-secondary">
+                <div class="text-center text-muted small">
+                    Thank you, come again!
+                </div>
+                {% endif %}
+            </div>
+            <div class="modal-footer border-secondary justify-content-center">
+                <a href="{{ url_for('pos.pos') }}" class="btn btn-warning btn-lg px-5">New Sale</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -165,6 +206,14 @@ function submitPayment(method) {
     document.getElementById('paymentMethod').value = method;
     document.getElementById('checkoutForm').submit();
 }
+
+// Auto-show receipt modal if receipt data exists
+{% if receipt %}
+document.addEventListener('DOMContentLoaded', function() {
+    const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
+    receiptModal.show();
+});
+{% endif %}
 
 // Category filtering
 document.querySelectorAll('.cat-filter').forEach(btn => {

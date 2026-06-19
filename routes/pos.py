@@ -19,7 +19,26 @@ def pos():
     categories = Category.query.order_by(Category.sort_order).all()
     products = Product.query.filter_by(active=True).order_by(Product.category_id, Product.name).all()
     cart = session.get('cart', [])
-    return render_template('pos.html', categories=categories, products=products, cart=cart)
+
+    receipt = None
+    receipt_id = request.args.get('receipt')
+    if receipt_id:
+        sale = Sale.query.get(int(receipt_id))
+        if sale:
+            receipt = {
+                'id': sale.id,
+                'items': [{
+                    'name': si.product.name,
+                    'qty': si.qty,
+                    'total': si.qty * si.unit_price
+                } for si in sale.items],
+                'total': sale.total,
+                'payment_method': sale.payment_method.title(),
+                'staff': sale.staff.name,
+                'time': sale.created_at.strftime('%d/%m/%Y %H:%M')
+            }
+
+    return render_template('pos.html', categories=categories, products=products, cart=cart, receipt=receipt)
 
 
 @pos_bp.route('/pos/cart/add', methods=['POST'])
@@ -131,7 +150,7 @@ def checkout():
     })
 
     session['cart'] = []
-    return redirect(url_for('pos.pos', success=1))
+    return redirect(url_for('pos.pos', receipt=sale.id))
 
 
 def calc_total(cart):

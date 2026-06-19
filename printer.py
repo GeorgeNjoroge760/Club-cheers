@@ -1,17 +1,12 @@
-try:
-    from escpos.printer import Usb
-    _printer_available = True
-except Exception:
-    _printer_available = False
-
-
 def print_receipt(sale_data):
-    if not _printer_available:
-        print("[Printer] Library not available — skipped")
+    try:
+        from escpos.printer import Usb
+        p = Usb(0x04b8, 0x0202, timeout=5, in_ep=0x82, out_ep=0x02)
+    except Exception as e:
+        print(f"[Printer] Not available: {e}")
         return False
 
     try:
-        p = Usb(0x04b8, 0x0202, timeout=5, in_ep=0x82, out_ep=0x02)
         p.set(align='center')
         p.text("CHEERS CLUB\n")
         p.text("===============\n\n")
@@ -36,18 +31,3 @@ def print_receipt(sale_data):
     except Exception as e:
         print(f"[Printer] Error: {e}")
         return False
-
-
-def print_test():
-    if not _printer_available:
-        return "Printer library not available"
-
-    try:
-        p = Usb(0x04b8, 0x0202, timeout=5, in_ep=0x82, out_ep=0x02)
-        p.set(align='center')
-        p.text("CHEERS CLUB\n")
-        p.text("Printer Test OK\n")
-        p.cut()
-        return "Printed successfully"
-    except Exception as e:
-        return f"Printer error: {e}"
