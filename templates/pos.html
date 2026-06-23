@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block body_class %}pos-layout{% endblock %}
 {% block navbar_cart %}
-<div class="d-md-none position-relative me-2">
+<div class="d-xl-none position-relative me-2">
     <button class="btn btn-sm btn-outline-light position-relative" onclick="openMobileCart()">
         <i class="bi bi-cart-fill"></i>
         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartBadge" style="display: none; font-size: 0.6rem;">0</span>
@@ -10,8 +10,8 @@
 {% endblock %}
 {% block content %}
 
-<div class="row g-0" style="height: calc(100vh - 56px);">
-    <div class="col-12 col-md-8 d-flex flex-column p-1 p-md-2">
+<div class="row g-0" style="height: calc(100vh - 56px); height: calc(100dvh - 56px);">
+    <div class="col-12 col-xl-8 d-flex flex-column p-1 p-md-2">
         <input type="text" class="form-control mb-2" id="productSearch" placeholder="Search products..." autocomplete="off">
         <div class="d-flex gap-1 gap-md-2 overflow-auto pb-2 category-bar">
             <button class="btn btn-outline-warning cat-filter active" data-cat="all"><i class="bi bi-grid-3x3-gap-fill"></i> All</button>
@@ -34,7 +34,7 @@
         </div>
     </div>
 
-    <div class="d-none d-md-flex col-md-4 bg-white border-start flex-column cart-panel p-2 p-md-3">
+    <div class="d-none d-xl-flex col-xl-4 bg-white border-start flex-column cart-panel p-2 p-md-3">
         <h5 class="text-dark mb-3 fs-6">
             <i class="bi bi-cart-fill text-warning"></i> Cart
             <button class="btn btn-outline-danger btn-sm float-end" onclick="clearCart()"><i class="bi bi-trash3"></i></button>
@@ -48,13 +48,13 @@
     </div>
 </div>
 
-<div class="offcanvas offcanvas-bottom d-md-none" tabindex="-1" id="mobileCart" style="height: 75vh; border-radius: 16px 16px 0 0;">
+<div class="offcanvas offcanvas-bottom d-xl-none" tabindex="-1" id="mobileCart">
     <div class="offcanvas-header border-bottom">
         <h5 class="offcanvas-title"><i class="bi bi-cart-fill text-warning"></i> Cart</h5>
         <button class="btn btn-outline-danger btn-sm me-2" onclick="clearCart()"><i class="bi bi-trash3"></i></button>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
-    <div class="offcanvas-body d-flex flex-column p-3">
+    <div class="offcanvas-body d-flex flex-column p-3 overflow-hidden">
         <div class="flex-grow-1 overflow-auto mb-3" id="mobileCartItems">
             {% include "_cart_items.html" %}
         </div>
