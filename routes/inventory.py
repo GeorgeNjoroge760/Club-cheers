@@ -84,7 +84,7 @@ def stock_in():
     if request.method == 'POST':
         product_id = int(request.form.get('product_id'))
         qty = float(request.form.get('qty'))
-        cost_per_unit = float(request.form.get('cost_per_unit', 0))
+        cost_per_unit = float(request.form.get('cost_per_unit', 0) or 0)
         note = request.form.get('note', '')
 
         product = Product.query.get(product_id)
