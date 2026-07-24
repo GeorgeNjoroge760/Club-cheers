@@ -1,4 +1,4 @@
-const CACHE = 'whispers-pos-v1';
+const CACHE = 'whispers-pos-v2';
 
 self.addEventListener('install', e => {
   e.waitUntil(
