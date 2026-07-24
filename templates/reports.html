@@ -167,29 +167,37 @@ function viewReceipt(saleId) {
         .then(r => r.json())
         .then(data => {
             currentReceiptData = data;
-            let html = `
-                <div class="text-center mb-2">
-                    <strong style="color: #166534;">Whispers Lounge</strong>
-                    <div class="small text-muted">Receipt #${data.id}</div>
-                </div>
-                <hr class="my-1">
-                <div class="small text-muted mb-1">${data.staff} | ${data.time}</div>
-                <hr class="my-1">
-                <table class="w-100 small">
-                    <tr><th class="text-start">Item</th><th class="text-center">Qty</th><th class="text-end">Total</th></tr>`;
+            let itemsHtml = '';
             data.items.forEach(function(item) {
-                html += `<tr><td>${item.name}</td><td class="text-center">${item.qty}</td><td class="text-end">KES ${item.total.toFixed(0)}</td></tr>`;
+                itemsHtml += `<div class="d-flex justify-content-between small mb-1">
+                    <span>${item.name} <span class="text-muted">x${item.qty.toFixed(0)}</span></span>
+                    <span>KES ${item.total.toFixed(0)}</span>
+                </div>`;
             });
-            html += `
-                </table>
-                <hr class="my-1">
-                <div class="d-flex justify-content-between fw-bold fs-6">
-                    <span>TOTAL</span>
-                    <span>KES ${data.total.toFixed(0)}</span>
+            let html = `
+                <div class="text-center mb-3">
+                    <i class="bi bi-cup-straw text-warning" style="font-size: 2rem;"></i>
+                    <div class="fs-5 fw-bold text-dark">WHISPERS LOUNGE</div>
+                    <div class="small text-muted">Receipt #${data.id}</div>
+                    <div class="small text-muted">${data.time}</div>
+                    <div class="small text-muted"><i class="bi bi-person"></i> ${data.staff}</div>
                 </div>
-                <div class="small text-muted text-center mt-1">${data.payment_method}</div>
-                <hr class="my-1">
-                <div class="small text-muted text-center">Thank you!</div>`;
+                <hr class="border-secondary">
+                <div class="mb-3">${itemsHtml}</div>
+                <hr class="border-secondary">
+                <div class="d-flex justify-content-between fs-5 fw-bold">
+                    <span class="text-dark">TOTAL</span>
+                    <span class="text-warning">KES ${data.total.toFixed(0)}</span>
+                </div>
+                <div class="text-center mt-2">
+                    <span class="badge fs-6 ${data.payment_method === 'Cash' ? 'bg-success' : data.payment_method === 'M-Pesa' ? 'bg-warning text-dark' : 'bg-info'}">
+                        <i class="bi ${data.payment_method === 'Cash' ? 'bi-cash' : data.payment_method === 'M-Pesa' ? 'bi-phone' : 'bi-credit-card'}"></i> ${data.payment_method}
+                    </span>
+                </div>
+                <hr class="border-secondary">
+                <div class="text-center text-muted small">
+                    <i class="bi bi-emoji-smile"></i> Thank you, come again!
+                </div>`;
             document.getElementById('receiptBody').innerHTML = html;
             document.getElementById('whatsappBtn').style.display = 'block';
         })
@@ -199,21 +207,36 @@ function viewReceipt(saleId) {
 }
 
 function printReceiptModal() {
-    const content = document.getElementById('receiptBody').innerHTML;
+    if (!currentReceiptData) return;
+    const data = currentReceiptData;
     const win = window.open('', '', 'width=300,height=600');
-    win.document.write(`<html><head><title>Receipt</title><style>
-        @page { size: 80mm auto; margin: 0; }
-        body { font-family: monospace; font-size: 13px; padding: 8px; margin: 0; width: 80mm; color: #000; background: #fff; }
-        * { color: #000 !important; background: transparent !important; }
-        hr { border-color: #ccc; }
-        .badge { border: 1px solid #000; padding: 2px 6px; }
-    </style></head><body>`);
-    win.document.write('<div class="text-center mb-2"><strong>Whispers Lounge</strong></div>');
-    win.document.write(content);
-    win.document.write('</body></html>');
+    let itemsHtml = '';
+    data.items.forEach(function(item) {
+        itemsHtml += '<div class="receipt-item"><span>' + item.name + ' <span class="item-qty">x' + item.qty.toFixed(0) + '</span></span><span>KES ' + item.total.toFixed(0) + '</span></div>';
+    });
+    let html = '<!DOCTYPE html><html><head><title>Receipt</title>' +
+        '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">' +
+        '<style>@page{size:80mm auto;margin:0}body{margin:0;padding:0}</style>' +
+        '</head><body><div class="receipt-print">' +
+        '<div class="receipt-header">' +
+        '<span class="receipt-icon"><i class="bi bi-cup-straw"></i></span>' +
+        '<div class="receipt-name">WHISPERS LOUNGE</div>' +
+        '<div class="receipt-meta">Receipt #' + data.id + '</div>' +
+        '<div class="receipt-meta">' + data.time + '</div>' +
+        '<div class="receipt-meta"><i class="bi bi-person"></i> ' + data.staff + '</div>' +
+        '</div>' +
+        '<hr class="receipt-divider">' +
+        '<div class="receipt-items">' + itemsHtml + '</div>' +
+        '<hr class="receipt-divider">' +
+        '<div class="receipt-total"><span>TOTAL</span><span>KES ' + data.total.toFixed(0) + '</span></div>' +
+        '<div class="receipt-payment"><span><i class="bi ' + (data.payment_method === 'Cash' ? 'bi-cash' : data.payment_method === 'M-Pesa' ? 'bi-phone' : 'bi-credit-card') + '"></i> ' + data.payment_method + '</span></div>' +
+        '<hr class="receipt-divider">' +
+        '<div class="receipt-footer"><i class="bi bi-emoji-smile"></i> Thank you, come again!</div>' +
+        '</div></body></html>';
+    win.document.write(html);
     win.document.close();
     win.focus();
-    setTimeout(function() { win.print(); }, 100);
+    setTimeout(function() { win.print(); }, 200);
 }
 
 function sendWhatsApp() {
