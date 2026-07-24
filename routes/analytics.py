@@ -181,7 +181,7 @@ def analytics_pdf():
             monthly_cost += (si.cost_price or 0) * si.qty
     monthly_profit = round(monthly_total - monthly_cost, 2)
 
-    now = datetime.now(timezone.utc).strftime('%d/%m/%Y %H:%M UTC')
+    now = (datetime.now(timezone.utc) + timedelta(hours=3)).strftime('%d/%m/%Y %H:%M EAT')
 
     context = dict(
         daily_sales=daily_sales,

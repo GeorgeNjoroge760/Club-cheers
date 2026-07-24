@@ -67,7 +67,7 @@
                                     {% if sale.payment_method == 'mpesa' %}M-Pesa{% else %}{{ sale.payment_method|title }}{% endif %}
                                 </span>
                             </td>
-                            <td class="text-muted">{{ sale.created_at.strftime('%H:%M') }}</td>
+                            <td class="text-muted">{{ sale.time }}</td>
                         </tr>
                         {% else %}
                         <tr><td colspan="5" class="text-center text-muted">No sales yet</td></tr>

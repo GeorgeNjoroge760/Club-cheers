@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from models import db, Staff, Sale, Product, SaleItem, StockMovement, Category
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -34,6 +34,16 @@ def dashboard():
     product_count = Product.query.filter_by(active=True).count()
     staff_count = Staff.query.filter_by(active=True).count()
 
+    recent_sales_data = []
+    for s in recent_sales:
+        recent_sales_data.append({
+            'id': s.id,
+            'staff': s.staff,
+            'total': s.total,
+            'payment_method': s.payment_method,
+            'time': (s.created_at + timedelta(hours=3)).strftime('%H:%M')
+        })
+
     return render_template('admin_dashboard.html',
                            today_total=today_total,
                            today_count=today_count,
@@ -41,7 +51,7 @@ def dashboard():
                            month_total=month_total,
                            product_count=product_count,
                            staff_count=staff_count,
-                           recent_sales=recent_sales)
+                           recent_sales=recent_sales_data)
 
 
 @admin_bp.route('/admin/staff')

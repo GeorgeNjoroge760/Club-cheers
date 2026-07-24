@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for
 from models import db, Sale, SaleItem
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 orders_bp = Blueprint('orders', __name__)
 
@@ -32,7 +32,7 @@ def orders():
                 'unit_price': si.unit_price,
                 'total': si.qty * si.unit_price
             } for si in s.items],
-            'time': s.created_at.strftime('%d/%m/%Y %H:%M')
+            'time': (s.created_at + timedelta(hours=3)).strftime('%d/%m/%Y %H:%M')
         })
 
     return render_template('orders.html',

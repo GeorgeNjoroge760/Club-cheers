@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify
 from models import db, Product, Category, Sale, SaleItem, StockMovement, Staff
 from printer import print_receipt
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 pos_bp = Blueprint('pos', __name__)
 
@@ -38,7 +38,7 @@ def pos():
                 'total': sale.total,
                 'payment_method': 'M-Pesa' if sale.payment_method == 'mpesa' else sale.payment_method.title(),
                 'staff': sale.staff.name,
-                'time': sale.created_at.strftime('%d/%m/%Y %H:%M')
+                'time': (sale.created_at + timedelta(hours=3)).strftime('%d/%m/%Y %H:%M')
             }
 
     return render_template('pos.html', categories=categories, products=products, cart=cart, cart_total=cart_total, receipt=receipt)
@@ -184,7 +184,7 @@ def receipt_json(sale_id):
         'total': sale.total,
         'payment_method': 'M-Pesa' if sale.payment_method == 'mpesa' else sale.payment_method.title(),
         'staff': sale.staff.name,
-        'time': sale.created_at.strftime('%d/%m/%Y %H:%M')
+        'time': (sale.created_at + timedelta(hours=3)).strftime('%d/%m/%Y %H:%M')
     }
 
 
@@ -220,7 +220,7 @@ def sales_history():
             'total': s.total,
             'payment_method': 'M-Pesa' if s.payment_method == 'mpesa' else s.payment_method.title(),
             'items_count': sum(si.qty for si in s.items),
-            'time': s.created_at.strftime('%d/%m/%Y %H:%M')
+            'time': (s.created_at + timedelta(hours=3)).strftime('%d/%m/%Y %H:%M')
         })
 
     staff_list = []
