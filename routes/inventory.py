@@ -32,6 +32,7 @@ def product_add():
             unit=request.form.get('unit', 'unit')
         )
         db.session.add(product)
+        db.session.flush()
 
         if product.stock_qty > 0 and product.cost_price:
             movement = StockMovement(
@@ -110,6 +111,6 @@ def category_add():
         return redirect(url_for('auth.admin_login'))
     name = request.form.get('name')
     if name:
-        Category(name=name).save()
+        db.session.add(Category(name=name))
         db.session.commit()
     return redirect(url_for('inventory.inventory'))

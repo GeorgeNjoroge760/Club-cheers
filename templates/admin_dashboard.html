@@ -36,6 +36,43 @@
         </div>
     </div>
 
+    {% if low_stock %}
+    <div class="card border-warning mb-3">
+        <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+            <h6 class="mb-0"><i class="bi bi-exclamation-triangle-fill"></i> Low Stock Alert</h6>
+            <span class="badge bg-dark">{{ low_stock|length }} items</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-sm mb-0 small">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th class="text-end">Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in low_stock %}
+                        <tr>
+                            <td class="{% if p.stock_qty == 0 %}text-danger fw-bold{% endif %}">{{ p.name }}</td>
+                            <td class="text-muted">{{ p.category.name }}</td>
+                            <td class="text-end">
+                                {% if p.stock_qty == 0 %}
+                                    <span class="badge bg-danger">Out of stock</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">{{ "%.0f"|format(p.stock_qty) }} {{ p.unit }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <div class="card border-light mb-3">
         <div class="card-header border-light d-flex justify-content-between align-items-center">
             <h6 class="mb-0 text-dark"><i class="bi bi-clock-history"></i> Recent Orders</h6>
@@ -79,29 +116,73 @@
     </div>
 
     <div class="row g-2 g-md-3">
-        <div class="col-6 col-md-3">
+        <div class="col-6 col-md-4">
             <a href="{{ url_for('pos.pos') }}" class="btn btn-warning w-100 py-3 fw-bold">
                 <i class="bi bi-cart-fill fs-5 d-block d-md-inline"></i> POS
             </a>
         </div>
-        <div class="col-6 col-md-3">
+        <div class="col-6 col-md-4">
             <a href="{{ url_for('orders.orders') }}" class="btn btn-outline-dark w-100 py-3 fw-bold">
                 <i class="bi bi-receipt fs-5 d-block d-md-inline"></i> Orders
             </a>
         </div>
-        <div class="col-6 col-md-3">
+        <div class="col-6 col-md-4">
             <a href="{{ url_for('inventory.inventory') }}" class="btn btn-outline-warning w-100 py-3 fw-bold">
                 <i class="bi bi-box-seam-fill fs-5 d-block d-md-inline"></i> Products
             </a>
         </div>
-        <div class="col-6 col-md-3">
+        <div class="col-6 col-md-4">
             <a href="{{ url_for('admin.staff_list') }}" class="btn btn-outline-info w-100 py-3 fw-bold">
                 <i class="bi bi-people-fill fs-5 d-block d-md-inline"></i> Users
+            </a>
+        </div>
+        <div class="col-6 col-md-4">
+            <a href="{{ url_for('admin.daily_summary') }}" class="btn btn-outline-success w-100 py-3 fw-bold">
+                <i class="bi bi-calendar-check fs-5 d-block d-md-inline"></i> Daily Summary
             </a>
         </div>
     </div>
 
     <hr class="my-4">
+    <div class="card border-info mb-3">
+        <div class="card-header bg-info text-white">
+            <i class="bi bi-cloud-arrow-down-fill"></i> Backup & Restore
+        </div>
+        <div class="card-body">
+            <div class="d-flex flex-column flex-sm-row gap-2">
+                <a href="{{ url_for('admin.backup_database') }}" class="btn btn-outline-info">
+                    <i class="bi bi-download"></i> Download Backup
+                </a>
+                <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#restoreModal">
+                    <i class="bi bi-upload"></i> Restore from Backup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="restoreModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h6 class="modal-title fw-bold"><i class="bi bi-exclamation-triangle"></i> Restore Database</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small">This will replace the current database with your backup file. A safety backup of the current database will be kept.</p>
+                    <form id="restore-form" method="POST" action="{{ url_for('admin.restore_database') }}" enctype="multipart/form-data">
+                        <input type="file" name="backup_file" accept=".db" class="form-control" required>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-warning fw-bold" onclick="document.getElementById('restore-form').submit()">
+                        <i class="bi bi-upload"></i> Restore
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card border-danger mb-3">
         <div class="card-header bg-danger text-white">
             <i class="bi bi-exclamation-triangle-fill"></i> Danger Zone

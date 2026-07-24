@@ -79,6 +79,7 @@
                 <div class="text-center mb-3">
                     <i class="bi bi-cup-straw text-warning" style="font-size: 2rem;"></i>
                     <div class="fs-5 fw-bold text-dark">WHISPERS LOUNGE</div>
+                    <div class="small text-muted">Naivasha</div>
                     <div class="small text-muted">Receipt #{{ receipt.id }}</div>
                     <div class="small text-muted">{{ receipt.time }}</div>
                     <div class="small text-muted"><i class="bi bi-person"></i> {{ receipt.staff }}</div>
@@ -243,6 +244,7 @@ function printReceipt() {
         '<div class="receipt-header">' +
         '<span class="receipt-icon"><i class="bi bi-cup-straw"></i></span>' +
         '<div class="receipt-name">WHISPERS LOUNGE</div>' +
+        '<div class="receipt-meta">Naivasha</div>' +
         '<div class="receipt-meta">Receipt #' + receipt.id + '</div>' +
         '<div class="receipt-meta">' + receipt.time + '</div>' +
         '<div class="receipt-meta"><i class="bi bi-person"></i> ' + receipt.staff + '</div>' +
