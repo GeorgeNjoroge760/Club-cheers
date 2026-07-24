@@ -100,5 +100,30 @@
             </a>
         </div>
     </div>
+
+    <hr class="my-4">
+    <div class="card border-danger mb-3">
+        <div class="card-header bg-danger text-white">
+            <i class="bi bi-exclamation-triangle-fill"></i> Danger Zone
+        </div>
+        <div class="card-body">
+            <p class="text-muted small mb-3">This will permanently delete all sales, products, categories, stock movements, and staff accounts. Your admin account will be preserved.</p>
+            <button class="btn btn-danger" onclick="confirmReset()">
+                <i class="bi bi-trash3-fill"></i> Reset Entire System
+            </button>
+        </div>
+    </div>
 </div>
+
+<script>
+function confirmReset() {
+    if (confirm('WARNING: This will delete ALL data including sales, products, categories, and staff.\n\nThis action CANNOT be undone.\n\nAre you sure you want to proceed?')) {
+        if (confirm('FINAL WARNING: Click OK to permanently erase everything.')) {
+            document.getElementById('reset-form').submit();
+        }
+    }
+}
+</script>
+
+<form id="reset-form" method="POST" action="{{ url_for('admin.reset_all') }}" class="d-none"></form>
 {% endblock %}

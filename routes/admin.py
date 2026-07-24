@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session
-from models import db, Staff, Sale, Product
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from models import db, Staff, Sale, Product, SaleItem, StockMovement, Category
 from datetime import datetime, timezone
 
 admin_bp = Blueprint('admin', __name__)
@@ -114,3 +114,22 @@ def change_password():
         db.session.commit()
         return render_template('change_password.html', success='Password changed successfully')
     return render_template('change_password.html')
+
+
+@admin_bp.route('/admin/reset-all', methods=['POST'])
+def reset_all():
+    if not admin_required():
+        return redirect(url_for('auth.admin_login'))
+
+    current_admin_id = session.get('staff_id')
+
+    StockMovement.query.delete()
+    SaleItem.query.delete()
+    Sale.query.delete()
+    Product.query.delete()
+    Category.query.delete()
+    Staff.query.filter(Staff.id != current_admin_id).delete()
+
+    db.session.commit()
+    flash('All data has been cleared. Your admin account was preserved.', 'success')
+    return redirect(url_for('admin.dashboard'))
