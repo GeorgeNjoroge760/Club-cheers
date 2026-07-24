@@ -268,6 +268,11 @@ body.pos-layout {
 }
 
 @media print {
+    @page {
+        size: 80mm auto;
+        margin: 0;
+    }
+
     body * {
         visibility: hidden;
     }
@@ -282,17 +287,26 @@ body.pos-layout {
         left: 0;
         top: 0;
         width: 80mm;
+        margin: 0;
+        padding: 0;
     }
 
     #receiptModal .modal-header,
     #receiptModal .modal-footer {
-        display: none;
+        display: none !important;
+    }
+
+    #receiptModal .modal-dialog {
+        margin: 0;
+        max-width: 80mm;
     }
 
     #receiptModal .modal-content {
         border: none;
         background: white !important;
         color: black !important;
+        border-radius: 0;
+        box-shadow: none;
     }
 
     #receiptModal .modal-content * {
@@ -306,5 +320,9 @@ body.pos-layout {
 
     #receiptModal hr {
         border-color: #ccc !important;
+    }
+
+    #receiptModal .badge {
+        border: 1px solid #000;
     }
 }
