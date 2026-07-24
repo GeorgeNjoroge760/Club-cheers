@@ -1,4 +1,4 @@
-const CACHE = 'cheers-pos-v1';
+const CACHE = 'whispers-pos-v1';
 
 self.addEventListener('install', e => {
   e.waitUntil(

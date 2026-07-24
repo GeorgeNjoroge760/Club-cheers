@@ -169,7 +169,7 @@ function viewReceipt(saleId) {
             currentReceiptData = data;
             let html = `
                 <div class="text-center mb-2">
-                    <strong style="color: #166534;">Cheers Club</strong>
+                    <strong style="color: #166534;">Whispers Lounge</strong>
                     <div class="small text-muted">Receipt #${data.id}</div>
                 </div>
                 <hr class="my-1">
@@ -202,7 +202,7 @@ function printReceiptModal() {
     const content = document.getElementById('receiptBody').innerHTML;
     const win = window.open('', '', 'width=300,height=600');
     win.document.write('<html><head><title>Receipt</title><style>body{font-family:monospace;font-size:13px;padding:16px;}</style></head><body>');
-    win.document.write('<div class="text-center mb-2"><strong style="color:#166534;">Cheers Club</strong></div>');
+    win.document.write('<div class="text-center mb-2"><strong style="color:#166534;">Whispers Lounge</strong></div>');
     win.document.write(content);
     win.document.write('</body></html>');
     win.document.close();
@@ -213,7 +213,7 @@ function printReceiptModal() {
 function sendWhatsApp() {
     if (!currentReceiptData) return;
     const data = currentReceiptData;
-    let msg = `*Cheers Club Receipt #${data.id}*\n${data.staff} | ${data.time}\n\n`;
+    let msg = `*Whispers Lounge Receipt #${data.id}*\n${data.staff} | ${data.time}\n\n`;
     data.items.forEach(i => { msg += `${i.name} x${i.qty} = KES ${i.total.toFixed(0)}\n`; });
     msg += `\n*TOTAL: KES ${data.total.toFixed(0)}*\n${data.payment_method}`;
     window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');

@@ -1,7 +1,7 @@
 {
-  "name": "Cheers Club POS",
-  "short_name": "Cheers POS",
-  "description": "Point of Sale system for Cheers Club",
+  "name": "Whispers Lounge POS",
+  "short_name": "Whispers POS",
+  "description": "Point of Sale system for Whispers Lounge",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

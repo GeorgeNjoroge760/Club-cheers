@@ -6,10 +6,10 @@ from routes import auth_bp, pos_bp, inventory_bp, reports_bp, admin_bp, orders_b
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'cheers-club-dev-key')
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'whispers-lounge-dev-key')
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
         'DATABASE_URL',
-        'sqlite:///cheers_club.db'
+        'sqlite:///whispers_lounge.db'
     )
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
